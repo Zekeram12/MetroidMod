@@ -3108,22 +3108,22 @@ Mods: {
 			}
 
 			TropicPlating2: {
-				DisplayName: Slightly Overgrown Tropic Plating
+				DisplayName: Exposed Tropic Plating
 				Tooltip: Name pending
 			}
 
 			TropicPlating3: {
-				DisplayName: Somewhat Overgrown Tropic Plating
+				DisplayName: Invasive Tropic Plating
 				Tooltip: Name pending
 			}
 
 			TropicPlating4: {
-				DisplayName: Very Overgrown Tropic Plating
+				DisplayName: Overgrown Tropic Plating
 				Tooltip: Name pending
 			}
 
 			TropicPlating5: {
-				DisplayName: Dangerously Overgrown Tropic Plating
+				DisplayName: Wild Tropic Plating
 				Tooltip: Name pending
 			}
 

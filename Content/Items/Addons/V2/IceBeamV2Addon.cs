@@ -40,16 +40,5 @@ namespace MetroidMod.Content.Items.Addons.V2
 			mItem.addonHeat = Common.Configs.MConfigItems.Instance.overheatIceBeamV2;
 			mItem.addonSpeed = Common.Configs.MConfigItems.Instance.speedIceBeamV2;
 		}
-
-		public override void AddRecipes()
-		{
-			CreateRecipe()
-				.AddIngredient<IceBeamAddon>(1)
-				.AddIngredient(ItemID.Ectoplasm, 8)
-				.AddIngredient(ItemID.BeetleHusk, 3)
-				.AddIngredient<Accessories.FrozenCore>(1)
-				.AddTile(TileID.MythrilAnvil)
-				.Register();
-		}
 	}
 }

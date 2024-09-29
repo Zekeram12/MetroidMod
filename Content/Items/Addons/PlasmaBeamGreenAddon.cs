@@ -25,7 +25,7 @@ namespace MetroidMod.Content.Items.Addons
 			Item.height = 14;
 			Item.maxStack = 1;
 			Item.value = 70000;
-			Item.rare = ItemRarityID.LightRed;
+			Item.rare = ItemRarityID.Pink;
 			Item.useTurn = true;
 			Item.autoReuse = true;
 			Item.useAnimation = 15;
@@ -44,8 +44,24 @@ namespace MetroidMod.Content.Items.Addons
 		{
 			CreateRecipe()
 				.AddIngredient<Miscellaneous.UnknownPlasmaBeam>(1)
-				.AddRecipeGroup(MUtils.CalamityActive() ? MetroidMod.T1HMBarRecipeGroupID : MetroidMod.T3HMBarRecipeGroupID, 5)
-				.AddIngredient(ItemID.SoulofLight, 5)
+				.AddIngredient(ItemID.HallowedBar, 10)
+				.AddIngredient(ItemID.SoulofSight, 5)
+				.AddIngredient(ItemID.Emerald, 1)
+				.AddTile(TileID.MythrilAnvil)
+				.Register();
+
+			CreateRecipe()
+				.AddIngredient<Miscellaneous.UnknownPlasmaBeam>(1)
+				.AddIngredient(ItemID.HallowedBar, 10)
+				.AddIngredient(ItemID.SoulofMight, 5)
+				.AddIngredient(ItemID.Emerald, 1)
+				.AddTile(TileID.MythrilAnvil)
+				.Register();
+
+			CreateRecipe()
+				.AddIngredient<Miscellaneous.UnknownPlasmaBeam>(1)
+				.AddIngredient(ItemID.HallowedBar, 10)
+				.AddIngredient(ItemID.SoulofFright, 5)
 				.AddIngredient(ItemID.Emerald, 1)
 				.AddTile(TileID.MythrilAnvil)
 				.Register();

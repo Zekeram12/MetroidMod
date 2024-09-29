@@ -1,4 +1,5 @@
 using MetroidMod.Common.GlobalItems;
+using MetroidMod.Content.Items.Addons.V2;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,6 +19,7 @@ namespace MetroidMod.Content.Items.Addons
 				string.Format("[c/78BE78:+15% speed]")); */
 
 			Item.ResearchUnlockCount = 1;
+			ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<WideBeamAddon>();
 		}
 		public override void SetDefaults()
 		{
@@ -44,11 +46,10 @@ namespace MetroidMod.Content.Items.Addons
 		{
 			CreateRecipe(1)
 				.AddIngredient<Miscellaneous.ChoziteBar>(3)
-				.AddIngredient(ItemID.Stinger, 12)
-				.AddIngredient(ItemID.JungleSpores, 12)
+				.AddIngredient(ItemID.SoulofLight, 12)
 				.AddIngredient(ItemID.Topaz, 1)
-				.AddIngredient(ItemID.BeeWax, 12)
-				.AddTile(TileID.Anvils)
+				.AddRecipeGroup(MUtils.CalamityActive() ? MetroidMod.T1HMBarRecipeGroupID : MetroidMod.T3HMBarRecipeGroupID, 5)
+				.AddTile(TileID.MythrilAnvil)
 				.Register();
 		}
 	}

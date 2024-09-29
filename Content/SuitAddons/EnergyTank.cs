@@ -41,12 +41,12 @@ namespace MetroidMod.Content.SuitAddons
 		}
 		public override void AddRecipes()
 		{
-			CreateRecipe(1)
-				.AddIngredient<Items.Miscellaneous.EnergyShard>(4)
-				.AddIngredient<Items.Miscellaneous.ChoziteBar>(1)
-				.AddRecipeGroup(MetroidMod.EvilBarRecipeGroupID, 1)
-				.AddRecipeGroup(MetroidMod.EvilMaterialRecipeGroupID, 10)
-				.AddTile(TileID.Anvils)
+			CreateRecipe(1)											//The idea is that the recipe should be something you CAN make in lategame,
+				.AddIngredient<Items.Miscellaneous.ChoziteBar>(4)   //and that its ingredients are all renewable, sustainable resources,
+				.AddIngredient<Items.Miscellaneous.PowerCore>(1)    //to a point where you could see the chozo having used the recipe themselves,
+				.AddIngredient(ItemID.LifeFruit, 20)                //but actually making it in bulk would be incredibly tedious and annoying
+				.AddIngredient<Items.Miscellaneous.EnergyShard>(15) //especially for a single person
+				.AddTile(TileID.MythrilAnvil)
 				.Register();
 		}
 		public override void OnUpdateArmorSet(Player player, int stack)

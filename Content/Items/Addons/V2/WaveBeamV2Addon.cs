@@ -38,15 +38,5 @@ namespace MetroidMod.Content.Items.Addons.V2
 			mItem.addonHeat = Common.Configs.MConfigItems.Instance.overheatWaveBeamV2;
 			mItem.addonSpeed = Common.Configs.MConfigItems.Instance.speedWaveBeamV2;
 		}
-
-		public override void AddRecipes()
-		{
-			CreateRecipe(1)
-				.AddIngredient<WaveBeamAddon>(1)
-				.AddIngredient(ItemID.HallowedBar, 8)
-				.AddIngredient(ItemID.SoulofMight, 10)
-				.AddTile(TileID.MythrilAnvil)
-				.Register();
-		}
 	}
 }

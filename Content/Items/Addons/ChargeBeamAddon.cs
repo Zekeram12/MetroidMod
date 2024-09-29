@@ -43,8 +43,8 @@ namespace MetroidMod.Content.Items.Addons
 		{
 			CreateRecipe(1)
 				.AddIngredient<Miscellaneous.ChoziteBar>(3)
-				.AddIngredient(ItemID.ManaCrystal, 1)
-				.AddIngredient(ItemID.FallenStar, 2)
+				.AddIngredient<Items.Miscellaneous.PowerCore>(1)
+				.AddIngredient(ItemID.MeteoriteBar, 10)
 				.AddTile(TileID.Anvils)
 				.Register();
 		}

@@ -43,14 +43,12 @@ namespace MetroidMod.Content.Items.Addons.V2
 		public override void AddRecipes()
 		{
 			CreateRecipe(1)
-				.AddIngredient<PlasmaBeamGreenAddon>()
 				.AddIngredient(ItemID.ChlorophyteBar, 8)
 				.AddIngredient(ItemID.Emerald)
 				.AddIngredient(ItemID.LunarTabletFragment) // This is actually the "Solar Tablet Fragment" found in Lihzahrd chests
 				.AddTile(TileID.MythrilAnvil)
 				.Register();
 			CreateRecipe(1)
-				.AddIngredient<PlasmaBeamRedAddon>()
 				.AddIngredient(ItemID.ChlorophyteBar, 8)
 				.AddIngredient(ItemID.Emerald)
 				.AddIngredient(ItemID.LunarTabletFragment)

@@ -18,6 +18,7 @@ namespace MetroidMod.Content.Items.Addons.V2
 				string.Format("[c/78BE78:+15% speed]")); */
 
 			Item.ResearchUnlockCount = 1;
+			ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<SpazerAddon>();
 		}
 		public override void SetDefaults()
 		{
@@ -35,19 +36,9 @@ namespace MetroidMod.Content.Items.Addons.V2
 			Item.createTile = ModContent.TileType<Content.Tiles.ItemTile.Beam.WideBeamTile>();
 			MGlobalItem mItem = Item.GetGlobalItem<MGlobalItem>();
 			mItem.addonSlotType = 3;
-			mItem.addonDmg = Common.Configs.MConfigItems.Instance.damageWideBeam;
-			mItem.addonHeat = Common.Configs.MConfigItems.Instance.overheatWideBeam;
-			mItem.addonSpeed = Common.Configs.MConfigItems.Instance.speedWideBeam;
-		}
-
-		public override void AddRecipes()
-		{
-			CreateRecipe(1)
-				.AddIngredient<SpazerAddon>(1)
-				.AddIngredient(ItemID.HallowedBar, 8)
-				.AddIngredient(ItemID.SoulofFright, 10)
-				.AddTile(TileID.MythrilAnvil)
-				.Register();
+			mItem.addonDmg = Common.Configs.MConfigItems.Instance.damageSpazer;
+			mItem.addonHeat = Common.Configs.MConfigItems.Instance.overheatSpazer;
+			mItem.addonSpeed = Common.Configs.MConfigItems.Instance.speedSpazer;
 		}
 	}
 }
