@@ -6,11 +6,13 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Items\Weapons\PowerBeam2.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Music\" />
     <Folder Include="Assets\Effects\" />
     <Folder Include="Assets\Sounds\" />
+    <Folder Include="Assets\Textures\Beams\Power\" />
     <Folder Include="Assets\Textures\MissileAddons\" />
     <Folder Include="Assets\Textures\SuitAddons\EnergyTank\" />
     <Folder Include="Assets\Textures\SuitAddons\HiJumpBoots\" />

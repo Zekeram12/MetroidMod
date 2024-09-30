@@ -48,12 +48,6 @@ namespace MetroidMod.Content.Items.Addons.V2
 				.AddIngredient(ItemID.LunarTabletFragment) // This is actually the "Solar Tablet Fragment" found in Lihzahrd chests
 				.AddTile(TileID.MythrilAnvil)
 				.Register();
-			CreateRecipe(1)
-				.AddIngredient(ItemID.ChlorophyteBar, 8)
-				.AddIngredient(ItemID.Emerald)
-				.AddIngredient(ItemID.LunarTabletFragment)
-				.AddTile(TileID.MythrilAnvil)
-				.Register();
 		}
 	}
 }
