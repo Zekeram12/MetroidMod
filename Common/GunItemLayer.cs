@@ -28,7 +28,7 @@ namespace MetroidMod.Common
 				return;
 			}
 
-			if (I.type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>()|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>())
+			if (I.type == ModContent.ItemType<Content.Items.Weapons.PowerBeam2>()|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>())
 			{
 				Texture2D tex = Terraria.GameContent.TextureAssets.Item[I.type].Value;
 				MGlobalItem mi = I.GetGlobalItem<MGlobalItem>();

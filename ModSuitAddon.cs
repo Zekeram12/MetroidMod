@@ -12,6 +12,9 @@ namespace MetroidMod
 {
 	public abstract class ModSuitAddon : ModType
 	{
+		/// <summary>
+		/// Each addon has a number like Terraria items
+		/// </summary>
 		public int Type { get; private set; }
 		internal void ChangeType(int type) => Type = type;
 		/// <summary>
@@ -26,7 +29,13 @@ namespace MetroidMod
 		/// The <see cref="Item"/> this addon controls.
 		/// </summary>
 		public Item Item => ModItem.Item;
+		/// <summary>
+		/// References the ModItem previously generated
+		/// </summary>
 		public int ItemType { get; internal set; }
+		/// <summary>
+		/// References the ModTile previously generated
+		/// </summary>
 		public int TileType { get; internal set; }
 
 		/// <summary>
@@ -84,6 +93,9 @@ namespace MetroidMod
 		public bool ShouldOverrideShoulders { get; set; } = false;
 
 		public virtual int AddonSlot { get; set; } = SuitAddonSlotID.None;
+		/// <summary>
+		/// Determines if textures should load. If it's null, it will not try to create textures
+		/// </summary>
 		internal bool IsArmor => ArmorTextureHead != null && ArmorTextureHead != "" && ArmorTextureTorso != null && ArmorTextureTorso != "" && ArmorTextureLegs != null && ArmorTextureLegs != "";
 		public string GetAddonSlotName() => SuitAddonLoader.GetAddonSlotName(AddonSlot);
 		/// <summary>

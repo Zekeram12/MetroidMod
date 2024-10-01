@@ -3432,17 +3432,25 @@ Mods: {
 
 			PowerCore: {
 				DisplayName: Power Core
-				Tooltip: ""
+				Tooltip: '''
+						 'The beating heart of Chozo technology'
+						 '''
 			}
 
 			PurifiedBiomass: {
 				DisplayName: Purified Biomass
-				Tooltip: ""
+				Tooltip: '''
+						 Used to make advanced bio-technology
+						 '''
 			}
 
 			PowerBeam2: {
-				DisplayName: Power Beam2
-				Tooltip: ""
+				DisplayName: Power Beam Mk. II
+				Tooltip: '''
+						 The culmination of Zekeram's beam lunacy
+						 Will (hopefully) eventually replace the normal Power Beam
+						 The odds of it being finished: Better than I thought, worse than you'd think
+						 '''
 			}
 		}
 
