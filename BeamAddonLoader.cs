@@ -10,7 +10,7 @@ using Terraria.ModLoader.IO;
 
 namespace MetroidMod
 {
-	public static class BeamAddonLoader
+	public static class BeamAddonLoader //I'll be honest I dunno what half this shit does, it's mostly copied from the modsuitaddon equivalent
 	{
 		/// <summary>
 		/// List of all beam addons that exist.
