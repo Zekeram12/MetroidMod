@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MetroidMod.ID;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
@@ -12,9 +14,11 @@ namespace MetroidMod.Content.Projectiles
 {
 	internal class BeamShot2 : ModProjectile
 	{
-		Color color = MetroidMod.powColor;
+		public int[] VisualWinners = [-1, -1];
+		public ModBeamAddon[] beamAddons = new ModBeamAddon[BeamAddonSlotID.Count]; 
 		public float beamScale = 0.75f;
-		public override string Texture => $"{nameof(MetroidMod)}/Assets/Textures/Beams/Power/Shot";
+		public override string Texture => $"{nameof(MetroidMod)}/Assets/Textures/BeamAddons/PowerBeam/Shot";
+		Color color = MetroidMod.powColor;
 		public override void SetDefaults()
 		{
 			Projectile.width = 8;
@@ -46,6 +50,17 @@ namespace MetroidMod.Content.Projectiles
 			}
 			SoundStyle sound = new($"{MetroidMod.Instance.Name}/Assets/Sounds/BeamImpactSound");
 			SoundEngine.PlaySound(sound, Projectile.Center);
+		}
+
+		public override bool PreDraw(ref Color lightColor)
+		{
+			if (VisualWinners[0] == -1 || VisualWinners[1] == -1 || beamAddons == null) { return true; }
+			ModBeamAddon beamShape = beamAddons[VisualWinners[0]];
+			ModBeamAddon beamColor = beamAddons[VisualWinners[1]];
+			Texture2D beamTex = (ModContent.Request<Texture2D>(beamShape.ShotTexture).Value);
+			Main.EntitySpriteDraw(beamTex, Projectile.position, null, beamColor.ShotColor, Projectile.rotation, 
+								  new Vector2(beamTex.Width / 2, beamTex.Height / 2), beamScale, SpriteEffects.None);
+			return false;
 		}
 	}
 }

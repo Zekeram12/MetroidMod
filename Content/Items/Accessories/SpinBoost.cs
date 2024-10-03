@@ -13,7 +13,7 @@ namespace MetroidMod.Content.Items.Accessories
 		public override void SetStaticDefaults()
 		{
 			Item.ResearchUnlockCount = 1;
-			ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<SpaceJumpBoots>();
+			ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<SpaceJumpBoots>(); //this is the entire reason spin boost exists
 		}
 		public override void SetDefaults()
 		{

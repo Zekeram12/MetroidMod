@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Localization;
 using Terraria;
 using MetroidMod.ID;
+using MetroidMod.Default;
 
 //gonna document as much of the code as I can to make it easy to follow
 namespace MetroidMod
@@ -50,18 +51,19 @@ namespace MetroidMod
 		/// </summary>
 		public virtual LocalizedText Tooltip => ModItem.GetLocalization(nameof(Tooltip), () => "");
 
+		//Appearance variables
 		/// <summary>
 		/// The filepath for the addon's item texture.
 		/// </summary>
-		public abstract string ItemTexture { get; }
+		public virtual string ItemTexture => $"{Mod.Name}/Assets/Textures/BeamAddons/{Name}/Item";
 		/// <summary>
 		/// the filepath for the addon's tile texture.
 		/// </summary>
-		public abstract string TileTexture { get; }
+		public virtual string TileTexture => $"{Mod.Name}/Assets/Textures/BeamAddons/{Name}/Tile";
 		/// <summary>
 		/// The filepath for the addon's normal shot texture.
 		/// </summary>
-		public abstract string ShotTexture { get; }
+		public virtual string ShotTexture => $"{Mod.Name}/Assets/Textures/BeamAddons/{Name}/Shot";
 		/// <summary>
 		/// The amount of animation frames in the normal shot texture.
 		/// </summary>
@@ -69,11 +71,11 @@ namespace MetroidMod
 		/// <summary>
 		/// The filepath for the addon's shot sound effect.
 		/// </summary>
-		public abstract string ShotSound { get; }
+		public virtual string ShotSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/Shot";
 		/// <summary>
 		/// The filepath for the addon's charged shot texture.
 		/// </summary>
-		public abstract string ChargeShotTexture { get; }
+		public virtual string ChargeShotTexture => $"{Mod.Name}/Assets/Textures/BeamAddons/{Name}/ChargeShot";
 		/// <summary>
 		/// The amount of animation frames in the charged shot texture.
 		/// </summary>
@@ -81,18 +83,23 @@ namespace MetroidMod
 		/// <summary>
 		/// The filepath for the addon's charged shot sound effect.
 		/// </summary>
-		public abstract string ChargeShotSound { get; }
+		public virtual string ChargeShotSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/ChargeShot";
+		/// <summary>
+		/// The filepath for the addon's shot/charged shot impact sound effect.
+		/// </summary>
+		public virtual string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/Impact";
 		/// <summary>
 		/// The color of the addon's projectile.
 		/// </summary>
 		public abstract Color ShotColor { get; }
 
+		//Visual Priority System variables
 		/// <summary>
 		/// Determines the level of priority of the addon's shot graphics.<br />
 		/// 0 is the lowest, 5 is the highest<br />
 		/// If the addon has the highest shape priority currently installed, its shot graphics will be used.<br />
 		/// In the case of a tie, graphics are decided by slot priority.<br />
-		/// Slot shape priority highest to lowest: Primary B, Primary A, Utility, Secondary, Charge
+		/// Slot shape priority highest to lowest: Primary B, Primary A, Secondary, Utility, Charge
 		/// </summary>
 		public int ShapePriority;
 		/// <summary>
@@ -106,19 +113,125 @@ namespace MetroidMod
 		/// <summary>
 		/// If true, addon's visuals completely override the priority system.<br/>
 		/// Intended for use on Special Beams, like Hyper and Phazon<br/>
+		/// Checks each addon in sequential order; 1, 2, yadda yadda.<br/>
 		/// (stands for Very Important Beam)
 		/// </summary>
 		public bool VIB = false;
 
+		//Addon stat variables
+		/// <summary>
+		/// The slot in the Addon UI that this addon uses.
+		/// </summary> 
 		public virtual int AddonSlot { get; set; } = BeamAddonSlotID.None;
+		/// <summary>
+		/// The base damage value this addon adds.<br/>
+		/// NOTE: Not to be confused with DamageMult, which is applied after this variable.
+		/// </summary>
+		public virtual int BaseDamage { get; set; } = 0;
+		/// <summary>
+		/// The damage multiplier value this addon adds.<br/>
+		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
+		/// (i.e. if the addon should have a 50% damage increase, put 50f instead of 1.5f)
+		/// </summary>
+		public virtual float DamageMult { get; set; } = 0f;
+		/// <summary>
+		/// The base usetime value this addon adds.<br/>
+		/// NOTE: Not to be confused with SpeedMult, which is applied after this variable.
+		/// </summary>
+		public virtual int BaseSpeed { get; set; } = 0;
+		/// <summary>
+		/// The usetime multiplier value this addon adds.<br/>
+		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
+		/// (i.e. if the addon should have a 50% speed increase, put 50f instead of 1.5f)
+		/// </summary>
+		public virtual float SpeedMult { get; set; } = 0f;
+		/// <summary>
+		/// The base velocity value this addon adds.<br/>
+		/// NOTE: Not to be confused with VelocityMult, which is applied after this variable.
+		/// </summary>
+		public virtual float BaseVelocity { get; set; } = 0f;
+		/// <summary>
+		/// The velocity multiplier value this addon adds.<br/>
+		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
+		/// (i.e. if the addon should have a 50% speed increase, put 50f instead of 1.5f)
+		/// </summary>
+		public virtual float VelocityMult {  get; set; } = 0f;
+		/// <summary>
+		/// The critical strike chance this addon adds.<br/>
+		/// NOTE: due to how crits work this one does NOT have a respective Mult value.
+		/// </summary>
+		public virtual int CritChance { get; set; } = 0;
+		/// <summary>
+		/// The base overheat value this addon adds.<br/>
+		/// NOTE: Not to be confused with OverheatMult, which is applied after this variable.
+		/// </summary>
+		public virtual int BaseOverheat { get; set;} = 0;
+		/// <summary>
+		/// The overheat multiplier value this addon adds.<br/>
+		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
+		/// (i.e. if the addon should have a -50% overheat multiplier, put -50f instead of 0.5f)
+		/// </summary>
+		public virtual float OverheatMult { get; set; } = 0f;
+
+
+
 
 		public bool ItemNameLiteral { get; set; } = true;
+		/// <summary>
+		/// Makes the addon in question only add the item and tile, not the beam properties.<br/>
+		/// Good for... something, I think   -Z
+		/// </summary>
 		public abstract bool AddOnlyAddonItem { get; }
 
+		public override void Load()
+		{
+			ModItem = new BeamAddonItem(this);
+			ModTile = new BeamAddonTile(this);
+			if (ModItem == null) { throw new Exception("WTF happened here? BeamAddonItem is null!"); }
+			if (ModTile == null) { throw new Exception("WTF happened here? BeamAddonTile is null!"); }
+			Mod.AddContent(ModItem);
+			Mod.AddContent(ModTile);
+
+		}
+
+		public override void Unload()
+		{
+			ModItem.Unload();
+			ModTile.Unload();
+			ModItem = null;
+			ModTile = null;
+			base.Unload();
+		}
 
 		protected sealed override void Register()
 		{
-			throw new NotImplementedException();
+			if (!AddOnlyAddonItem || BeamAddonLoader.AddonCount <= 127)
+			{
+				Type = BeamAddonLoader.AddonCount;
+				if (Type > 127)
+				{
+					throw new Exception("Beam Addons Limit Reached. (Max: 128)");
+				}
+				BeamAddonLoader.addons.Add(this);
+			}
+			MetroidMod.Instance.Logger.Info("Register new Beam Addon: " + FullName + ", OnlyAddonItem: " + AddOnlyAddonItem);
 		}
+
+		public override void SetStaticDefaults()
+		{
+			Main.tileSpelunker[TileType] = true;
+			Main.tileOreFinderPriority[Type] = 806;
+			base.SetStaticDefaults();
+		}
+
+		/// <inheritdoc cref="ModItem.SetDefaults()"/>
+		public virtual void SetItemDefaults(Item item) { }
+		/// <inheritdoc cref="ModItem.AddRecipes"/>
+		public virtual void AddRecipes() { }
+		public virtual bool ShowTileHover(Player player) => player.InInteractionRange(Player.tileTargetX, Player.tileTargetY, default);
+		/// <inheritdoc cref="ModTile.CanKillTile(int, int, ref bool)"/>
+		public virtual bool CanKillTile(int i, int j) { return true; }
+		/// <inheritdoc cref="ModMBAddon.CanExplodeTile(int, int)"/>
+		public virtual bool CanExplodeTile(int i, int j) { return true; }
 	}
 }

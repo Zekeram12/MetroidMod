@@ -12,7 +12,7 @@ namespace MetroidMod.Common.GlobalItems
 	{
 		public AddonType AddonType = AddonType.None;
 
-		#region Old code, remove later in favor of modularity maybe?
+		#region Old code, remove later when power beam 2 is done
 		public int addonSlotType = -1;
 		public int beamSlotType = -1;
 		public int missileChangeType = -1;
@@ -44,6 +44,9 @@ namespace MetroidMod.Common.GlobalItems
 		public static int seekerMaxCharge = 25;
 
 		public Texture2D itemTexture;
+		/// <summary>
+		/// Determines if the Arm Cannon is set to beam mode.
+		/// </summary>
 		public bool isBeam=true;
 
 		public override bool InstancePerEntity => true;

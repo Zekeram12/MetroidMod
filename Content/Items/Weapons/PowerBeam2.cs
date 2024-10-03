@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using MetroidMod.Common.GlobalItems;
@@ -8,10 +9,12 @@ using MetroidMod.Common.Players;
 using MetroidMod.Content.DamageClasses;
 using MetroidMod.Content.Projectiles;
 using MetroidMod.Content.Projectiles.Paralyzer;
+using MetroidMod.Default;
 using MetroidMod.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,7 +28,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The array in which active beam addons are stored.
 		/// </summary>
-		private Item[] BeamAddons;
+		private Item[] beamAddons;
 		/// <summary>
 		/// Used to access the contents of the beam addon array.<br/>
 		/// Needed because quote: "Something something data security"
@@ -33,37 +36,48 @@ namespace MetroidMod.Content.Items.Weapons
 		public Item[] BeamAddonAccess
 		{
 			get {
-				if (BeamAddons == null) //This is a failsafe; if the array comes up null, reset the array
+				if (beamAddons == null) //This is a failsafe; if the array comes up null, reset the array
 				{
-					BeamAddons = new Item[BeamAddonSlotID.Count]; //iterate through all slots of the array
-					for (int i = 0; i < BeamAddons.Length; ++i)
+					beamAddons = new Item[BeamAddonSlotID.Count]; //iterate through all slots of the array
+					for (int i = 0; i < beamAddons.Length; ++i)
 					{
-						BeamAddons[i] = new Item();
-						BeamAddons[i].TurnToAir();
+						beamAddons[i] = new Item();
+						beamAddons[i].TurnToAir();
 					}
 				}
-				return BeamAddons;
+				return beamAddons;
+			}
+		}
+		/// <summary>
+		/// Used to access the stats of beam addons to modify the Power Beam.
+		/// </summary>
+		public ModBeamAddon[] BeamAddonModifier
+		{
+			get {
+				ModBeamAddon[] addons = BeamAddonAccess //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(i => BeamAddonLoader.GetAddon(i))
+				.Where(i => i != null)
+				.ToArray();
+				return addons;
 			}
 		}
 		/// <summary>
 		/// The array in which secondary charge addons are stored.<br/>
-		/// TODO: Give this a better name later       -Z
 		/// </summary>
-		private Item[] BeamArray;
+		private Item[] chargeQuickSwap;
 		/// <summary>
-		/// Used to access the contents of the beam array array.<br/>
-		/// ...Yeah do you see why I need to come up with a better name now?  -Z
+		/// Used to access the contents of the beam array array.
 		/// </summary>
-		public Item[] BeamArrayAccess
+		public Item[] ChargeQuickSwapAccess
 		{
 			get {
-				if (BeamArray == null)
+				if (chargeQuickSwap == null)
 				{
-					BeamArray = new Item[1]; //Array is dynamic, so reset to one Item long and turn that Item into air
-					BeamArray[0] = new Item();
-					BeamArray[0].TurnToAir();
+					chargeQuickSwap = new Item[1]; //Array is dynamic, so reset to one Item long and turn that Item into air
+					chargeQuickSwap[0] = new Item();
+					chargeQuickSwap[0].TurnToAir();
 				}
-				return BeamArray;
+				return chargeQuickSwap;
 			}
 		}
 
@@ -71,7 +85,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The array in which active missile addons are stored.
 		/// </summary>
-		private Item[] MissileAddons;
+		private Item[] missileAddons;
 		/// <summary>
 		/// Used to access the contents of the missile addon array.<br/>
 		/// Needed because quote: "Something something data security"
@@ -79,37 +93,35 @@ namespace MetroidMod.Content.Items.Weapons
 		public Item[] MissileAddonAccess
 		{
 			get {
-				if(MissileAddons == null) //see BeamAddonAccess above
+				if(missileAddons == null) //see BeamAddonAccess above
 				{
-					MissileAddons = new Item[MissileAddonSlotID.Count];
-					for (int i = 0; i < MissileAddons.Length; ++i)
+					missileAddons = new Item[MissileAddonSlotID.Count];
+					for (int i = 0; i < missileAddons.Length; ++i)
 					{
-						MissileAddons[i] = new Item();
-						MissileAddons[i].TurnToAir();
+						missileAddons[i] = new Item();
+						missileAddons[i].TurnToAir();
 					}
 				}
-				return MissileAddons;
+				return missileAddons;
 			}
 		}
 		/// <summary>
-		/// The array in which secondary charge combos are stored. <br/>
-		/// TODO: Give this a better name           -Z
+		/// The array in which secondary charge combos are stored.
 		/// </summary>
-		private Item[] MissileArray;
+		private Item[] comboQuickChange;
 		/// <summary>
-		/// Used to access the contents of the missile array array.<br/>
-		/// ...Yeah do you see why I need to come up with a better name now?  -Z
+		/// Used to access the contents of the combo quick change array.
 		/// </summary>
-		public Item[] MissileArrayAccess
+		public Item[] ComboQuickChangeAccess
 		{
 			get { 
-				if(MissileArray == null) //See BeamArrayAccess above
+				if(comboQuickChange == null) //See BeamArrayAccess above
 				{
-					MissileArray = new Item[1];
-					MissileArray[0] = new Item();
-					MissileArray[0].TurnToAir();
+					comboQuickChange = new Item[1];
+					comboQuickChange[0] = new Item();
+					comboQuickChange[0].TurnToAir();
 				}
-				return MissileArray;
+				return comboQuickChange;
 			}
 		}
 
@@ -127,40 +139,56 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The Power Beam's total damage multiplier from installed addons.
 		/// </summary>
-		float damageMult = 1f;
+		float damageMult = 0f; //write these as percentages like you'd see them in tooltips, they'll get converted later
 		/// <summary>
 		/// The Power Beam's base usetime, before accounting for addon multipliers.
 		/// </summary>
 		int baseSpeed = 10;
 		/// <summary>
+		/// The Power Beam's total additional base speed from installed addons.
+		/// </summary>
+		int baseSpeedBonus = 0;
+		/// <summary>
 		/// The Power Beam's total speed multiplier from installed addons.
 		/// </summary>
-		float speedMult = 1f;
+		float speedMult = 0f;
 		/// <summary>
 		/// The Power Beam's total base velocity, before accounting for addon multipliers.
 		/// </summary>
 		float baseVelocity = 16f;
 		/// <summary>
+		/// The Power Beam's total additional base velocity from installed addons.
+		/// </summary>
+		float baseVelocityBonus = 0f;
+		/// <summary>
 		/// The Power Beam's total velocity multiplier from installed addons.
 		/// </summary>
-		float velocityMultiplier = 1f;
+		float velocityMultiplier = 0f;
 		/// <summary>
 		/// The Power Beam's base critical strike chance, before accounting for addon multipliers.
 		/// </summary>
 		int baseCrit = 3;
 		/// <summary>
-		/// The Power Beam's total crit chance multiplier from installed addons.
-		/// NOTE: I'll be honest I dunno if this is how that works yet. I'll figure it out later.    -Z
+		/// The Power Beam's total additional base crit chance from installed addons.
 		/// </summary>
-		float critMultiplier = 1f;
+		int critBonus = 0;
 		/// <summary>
 		/// The Power Beam's base Overheat use, before accounting for addon multipliers.
 		/// </summary>
 		int baseOverheat = 4;
 		/// <summary>
+		/// The Power Beam's total additional base Overheat use from installed addons.
+		/// </summary>
+		int baseOverheatBonus = 0;
+		/// <summary>
 		/// The Power Beam's total overheat multiplier from installed addons.
 		/// </summary>
 		float overheatMultiplier = 1f;
+		/// <summary>
+		/// The final overheat value, which will be calculated in UpdateInventory.<br/>
+		/// It has to be out here because there's no baked-in variable like there is for damage/velocity/whatever
+		/// </summary>
+		int overheat = 0;
 		//NOTE: I'll figure out UA shit later      -Z
 
 
@@ -178,11 +206,11 @@ namespace MetroidMod.Content.Items.Weapons
 			Item.ResearchUnlockCount = 1;
 		}
 
-		public override void SetDefaults()
+		public override void SetDefaults() //obviously stats are set here
 		{
 			Item.damage = baseDamage;
-			Item.width = 16;
-			Item.height = 12;
+			Item.width = 40;
+			Item.height = 20;
 			Item.DamageType = ModContent.GetInstance<HunterDamageClass>();
 			Item.useTime = baseSpeed;
 			Item.useAnimation = 14;
@@ -196,7 +224,7 @@ namespace MetroidMod.Content.Items.Weapons
 			Item.shootSpeed = baseVelocity;
 			Item.crit = baseCrit;
 		}
-		public override void UseStyle(Player player, Rectangle heldItemFrame)
+		public override void UseStyle(Player player, Rectangle heldItemFrame) //makes the player's arm rotate with the arm cannon
 		{
 			Item.TryGetGlobalItem(out MGlobalItem mi);
 			float armRot = player.itemRotation - (float)(Math.PI / 2) * player.direction;
@@ -204,6 +232,12 @@ namespace MetroidMod.Content.Items.Weapons
 			Vector2 origin = player.GetFrontHandPosition(Player.CompositeArmStretchAmount.Full, armRot);
 			origin.Y -= heldItemFrame.Height / 2f;
 			player.itemLocation = origin + player.itemRotation.ToRotationVector2() * (mi.isBeam ? -16 : -14) * player.direction;
+		}
+
+		public override bool CanUseItem(Player player) //lets things properly restrict your ability to use the weapon
+		{
+			MPlayer mp = player.GetModPlayer<MPlayer>();
+			return Item.TryGetGlobalItem(out GlobalItem mi) && (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
@@ -223,7 +257,40 @@ namespace MetroidMod.Content.Items.Weapons
 		{
 			MPlayer mp = p.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
 			if (Item == null || !Item.TryGetGlobalItem(out MGlobalItem ac)) { return; }
+			//Adding up all the stat modifiers from installed beam addons
+			baseDamageBonus = 
+			Item.damage = (int)((baseDamage + baseDamageBonus) * (damageMult/100) + 1); //Formula for power beam base damage calc. Has to convert to int to work
+			Item.useTime = (int)((baseSpeed + baseSpeedBonus) * (speedMult/100) + 1); //Usetime calc
+			Item.shootSpeed = ((baseVelocity + baseVelocityBonus) * (velocityMultiplier/100) + 1);
+			Item.crit = baseCrit + critBonus;
+			overheat = (int)((baseOverheat + baseOverheatBonus) * (overheatMultiplier / 100) + 1);
 
+		}
+
+		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+		{
+			MPlayer mp = player.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
+			
+			int[] VisualDinners = BeamAddonLoader.VisualPriority(BeamAddonModifier); //VisualDinners[0] is the winning ShapePriority, VisualDinners[1] is the winning ColorPriority
+			if (VisualDinners[0] == -1 || VisualDinners[1] == -1) { return false; } //If either value is -1 that either means something's fucky or there's no addons installed, meaning just go with default values
+			Vector2 oPos = player.RotatedRelativePoint(player.MountedCenter, true);
+			float speedX = velocity.X;
+			float speedY = velocity.Y;
+			BeamShot2 beam = (Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI).ModProjectile) as BeamShot2;
+			beam.VisualWinners = VisualDinners;
+			beam.
+			mp.statOverheat += MGlobalItem.AmmoUsage(player, overheat * mp.overheatCost);
+			return false;
+		}
+
+		public override void AddRecipes()
+		{
+			CreateRecipe(1)
+				.AddIngredient<Miscellaneous.ChoziteBar>(8)
+				.AddIngredient<Tiles.MissileExpansion>(1)
+				.AddIngredient<Miscellaneous.EnergyShard>(3)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 }
