@@ -31,12 +31,12 @@ Mods: {
 			SomersaultEnabled: Allows somersaulting
 			IsSuitAddon:
 				'''
-				Power Suit Addon
+				[c/E5E560:Power Suit Addon]
 				Slot: 
 				'''
 			IsBeamAddon:
 				'''
-				Power Beam Addon
+				[c/5A915A:Power Beam Addon]
 				Slot: 
 				'''
 			IsMissileAddon:
@@ -315,6 +315,7 @@ Mods: {
 			GreenSwitch.MapEntry: Green Switch
 			RedSwitch.MapEntry: Red Switch
 			YellowSwitch.MapEntry: Yellow Switch
+			TestBeamTile.MapEntry: Test Beam Tile
 		}
 
 		Buffs: {
@@ -3432,25 +3433,27 @@ Mods: {
 
 			PowerCore: {
 				DisplayName: Power Core
-				Tooltip: '''
-						 'The beating heart of Chozo technology'
-						 '''
+				Tooltip: "'The beating heart of Chozo technology'"
 			}
 
 			PurifiedBiomass: {
 				DisplayName: Purified Biomass
-				Tooltip: '''
-						 Used to make advanced bio-technology
-						 '''
+				Tooltip: Used to make advanced bio-technology
 			}
 
 			PowerBeam2: {
 				DisplayName: Power Beam Mk. II
-				Tooltip: '''
-						 The culmination of Zekeram's beam lunacy
-						 Will (hopefully) eventually replace the normal Power Beam
-						 The odds of it being finished: Better than I thought, worse than you'd think
-						 '''
+				Tooltip:
+					'''
+					The culmination of Zekeram's beam lunacy
+					Will (hopefully) eventually replace the normal Power Beam
+					The odds of it being finished: Better than I thought, worse than you'd think
+					'''
+			}
+
+			TestBeamAddon: {
+				DisplayName: Test Beam
+				Tooltip: This is a test addon!
 			}
 		}
 
@@ -4834,7 +4837,6 @@ Mods: {
 						Enables a small, niche movement tech that has not been named.
 						(It's pronounced 'nitch' not 'neesh' -Dr)
 						'''
-						# I disagree       -Z
 				}
 
 				enableMorphBallWallJump: {

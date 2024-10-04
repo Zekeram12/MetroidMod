@@ -56,7 +56,7 @@ namespace MetroidMod.Content.Items.Weapons
 			get {
 				ModBeamAddon[] addons = BeamAddonAccess //Creates a version of BeamAddonAccess that can be fed into the visual priority system
 				.Select(i => BeamAddonLoader.GetAddon(i))
-				.Where(i => i != null)
+				//.Where(i => i != null)
 				.ToArray();
 				return addons;
 			}
@@ -200,7 +200,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The total number of shots the Power Beam will fire.
 		/// </summary>
-		int shotCount = 1;
+		int shotCount = 0;
 
 
 		//[[[MISSILE STATS]]]         Worry about this after the beams are done      -Z
@@ -231,7 +231,7 @@ namespace MetroidMod.Content.Items.Weapons
 			Item.value = 6969;
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = Sounds.Items.Weapons.PowerBeamSound;
-			Item.shoot = ModContent.ProjectileType<BeamShot2>(); //Most of the cool shit happens on the projectile itself
+			//Item.shoot = ModContent.ProjectileType<BeamShot2>(); //Most of the cool shit happens on the projectile itself
 			Item.shootSpeed = baseVelocity;
 			Item.crit = baseCrit;
 		}
@@ -248,7 +248,8 @@ namespace MetroidMod.Content.Items.Weapons
 		public override bool CanUseItem(Player player) //lets things properly restrict your ability to use the weapon
 		{
 			MPlayer mp = player.GetModPlayer<MPlayer>();
-			return Item.TryGetGlobalItem(out GlobalItem mi) && (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
+			//return (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
+			return true;
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
@@ -282,11 +283,11 @@ namespace MetroidMod.Content.Items.Weapons
 
 
 			//apply the numbers to the weapon
-			Item.damage = (int)((baseDamage + baseDamageBonus) * (damageMult/100) + 1); //Formula for power beam base damage calc. Has to convert to int to work
-			Item.useTime = (int)((baseSpeed + baseSpeedBonus) * (speedMult/100) + 1); //Usetime calc. Note that the mult is being divided by 100
-			Item.shootSpeed = ((baseVelocity + baseVelocityBonus) * (velocityMult/100) + 1); //Velocity calc. It adds 1 so the values can be easy to read
+			Item.damage = (int)((baseDamage + baseDamageBonus) * ((damageMult/100) + 1)); //Formula for power beam base damage calc. Has to convert to int to work
+			Item.useTime = (int)((baseSpeed + baseSpeedBonus) * ((speedMult/100) + 1)); //Usetime calc. Note that the mult is being divided by 100
+			Item.shootSpeed = ((baseVelocity + baseVelocityBonus) * ((velocityMult/100) + 1)); //Velocity calc. It adds 1 so the values can be easy to read
 			Item.crit = baseCrit + critBonus;
-			overheat = (int)((baseOverheat + baseOverheatBonus) * (overheatMult / 100) + 1);
+			overheat = (int)((baseOverheat + baseOverheatBonus) * ((overheatMult / 100) + 1));
 
 		}
 
@@ -295,14 +296,14 @@ namespace MetroidMod.Content.Items.Weapons
 			MPlayer mp = player.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
 			
 			int[] VisualDinners = BeamAddonLoader.VisualPriority(BeamAddonModifier); //VisualDinners[0] is the winning ShapePriority, VisualDinners[1] is the winning ColorPriority
-			if (VisualDinners[0] == -1 || VisualDinners[1] == -1) { return false; } //If either value is -1 that either means something's fucky or there's no addons installed, meaning just go with default values
+			if (VisualDinners[0] == -1 || VisualDinners[1] == -1) { return true; } //If either value is -1 that either means something's fucky or there's no addons installed, meaning just go with default values
 			Vector2 oPos = player.RotatedRelativePoint(player.MountedCenter, true);
 			float speedX = velocity.X;
 			float speedY = velocity.Y;
 			BeamShot2 beam = (Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI).ModProjectile) as BeamShot2;
 			beam.VisualWinners = VisualDinners;
 			
-			mp.statOverheat += MGlobalItem.AmmoUsage(player, overheat * mp.overheatCost);
+			//mp.statOverheat += MGlobalItem.AmmoUsage(player, overheat * mp.overheatCost);
 			return false;
 		}
 

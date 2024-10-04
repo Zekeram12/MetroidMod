@@ -13,7 +13,8 @@ using MetroidMod.Content.SuitAddons;
 
 namespace MetroidMod.Default
 {
-	[Autoload(false)] //Need this for this blank sucker otherwise Mr. Template will turn into a real item
+	[Autoload(false)]
+	
 	internal class BeamAddonItem : ModItem
 	{
 		public ModBeamAddon modBeamAddon;
@@ -58,6 +59,23 @@ namespace MetroidMod.Default
 			}
 		}
 
+		//You need the next two methods in here or else it will just NOT WORK
+		//And it'll take ages to figure out the problem
+		//For future reference for other addon systems I guess??
+		public override ModItem Clone(Item item)
+		{
+			BeamAddonItem obj = (BeamAddonItem)base.Clone(item);
+			obj.modBeamAddon = modBeamAddon;
+			return obj;
+		}
+
+		public override ModItem NewInstance(Item entity)
+		{
+			var inst = Clone(entity);
+			return inst;
+		}
+		//Again, don't forget those two up there
+		//You'll be kicking yourself over it
 		public override void AddRecipes()
 		{
 			modBeamAddon.AddRecipes();

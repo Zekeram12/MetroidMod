@@ -217,7 +217,7 @@ namespace MetroidMod
 
 		protected sealed override void Register()
 		{
-			if (!AddOnlyAddonItem || BeamAddonLoader.AddonCount <= 127)
+			if (!AddOnlyAddonItem && BeamAddonLoader.AddonCount <= 127)
 			{
 				Type = BeamAddonLoader.AddonCount;
 				if (Type > 127)
