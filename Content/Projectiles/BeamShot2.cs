@@ -58,6 +58,7 @@ namespace MetroidMod.Content.Projectiles
 			ModBeamAddon beamShape = beamAddons[VisualWinners[0]];
 			ModBeamAddon beamColor = beamAddons[VisualWinners[1]];
 			Texture2D beamTex = (ModContent.Request<Texture2D>(beamShape.ShotTexture).Value);
+			lightColor = beamColor.ShotColor;
 			Main.EntitySpriteDraw(beamTex, Projectile.position, null, beamColor.ShotColor, Projectile.rotation, 
 								  new Vector2(beamTex.Width / 2, beamTex.Height / 2), beamScale, SpriteEffects.None);
 			return false;

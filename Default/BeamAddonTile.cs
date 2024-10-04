@@ -15,6 +15,7 @@ using Terraria;
 
 namespace MetroidMod.Default
 {
+	[Autoload(false)]
 	internal class BeamAddonTile : ModTile
 	{
 		public ModBeamAddon modBeamAddon;

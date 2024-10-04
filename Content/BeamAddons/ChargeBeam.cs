@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using MetroidMod.ID;
-
+/*
 namespace MetroidMod.Content.BeamAddons
 {
 	//So fun fact, this is the first ModBeamAddon ever made!      -Z
@@ -21,7 +21,12 @@ namespace MetroidMod.Content.BeamAddons
 			ShapePriority = 0;
 			ColorPriority = 0;
 			VIB = false; //General rule of thumb: only enable this if your beam is Special:tm:
-			AddonSlot = BeamAddonSlotID.Charge;
+			AddonSlot = BeamAddonSlotID.Primary;
+
+			BaseDamage = 5;
+			DamageMult = 5f;
+			BaseOverheat = 5;
 		}
 	}
 }
+*/

@@ -135,7 +135,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// The Power Beam's total additional base damage from installed addons <br/>
 		/// NOTE: baseDamageBonus is applied BEFORE damageMult, which means that it effects the base that damageMult multiplies off of.
 		/// </summary>
-		int baseDamageBonus = 0;
+		int baseDamageBonus = 0; //I'm not actually sure if I need any of these besides the beam's base stats, but I'll keep em in just in case
 		/// <summary>
 		/// The Power Beam's total damage multiplier from installed addons.
 		/// </summary>
@@ -163,7 +163,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The Power Beam's total velocity multiplier from installed addons.
 		/// </summary>
-		float velocityMultiplier = 0f;
+		float velocityMult = 0f;
 		/// <summary>
 		/// The Power Beam's base critical strike chance, before accounting for addon multipliers.
 		/// </summary>
@@ -183,13 +183,24 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The Power Beam's total overheat multiplier from installed addons.
 		/// </summary>
-		float overheatMultiplier = 1f;
+		float overheatMult = 1f;
 		/// <summary>
 		/// The final overheat value, which will be calculated in UpdateInventory.<br/>
 		/// It has to be out here because there's no baked-in variable like there is for damage/velocity/whatever
 		/// </summary>
 		int overheat = 0;
-		//NOTE: I'll figure out UA shit later      -Z
+		/// <summary>
+		/// The Power Beam's total base ammo count.
+		/// </summary>
+		int baseAmmo = 0;
+		/// <summary>
+		/// The Power Beam's total bonus ammo from expansions.
+		/// </summary>
+		int ammoBonus = 0;
+		/// <summary>
+		/// The total number of shots the Power Beam will fire.
+		/// </summary>
+		int shotCount = 1;
 
 
 		//[[[MISSILE STATS]]]         Worry about this after the beams are done      -Z
@@ -257,13 +268,25 @@ namespace MetroidMod.Content.Items.Weapons
 		{
 			MPlayer mp = p.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
 			if (Item == null || !Item.TryGetGlobalItem(out MGlobalItem ac)) { return; }
+
 			//Adding up all the stat modifiers from installed beam addons
-			baseDamageBonus = 
+			baseDamageBonus = BeamAddonLoader.BaseDamageStacker(BeamAddonModifier);
+			damageMult = BeamAddonLoader.DamageMultStacker(BeamAddonModifier);
+			baseSpeedBonus = BeamAddonLoader.BaseSpeedStacker(BeamAddonModifier);
+			speedMult = BeamAddonLoader.SpeedMultStacker(BeamAddonModifier);
+			baseVelocityBonus = BeamAddonLoader.BaseVelocityStacker(BeamAddonModifier);
+			velocityMult = BeamAddonLoader.VelocityMultStacker(BeamAddonModifier);
+			critBonus = BeamAddonLoader.CritChanceStacker(BeamAddonModifier);
+			baseOverheatBonus = BeamAddonLoader.BaseOverheatStacker(BeamAddonModifier);
+			overheatMult = BeamAddonLoader.OverheatMultStacker(BeamAddonModifier);
+
+
+			//apply the numbers to the weapon
 			Item.damage = (int)((baseDamage + baseDamageBonus) * (damageMult/100) + 1); //Formula for power beam base damage calc. Has to convert to int to work
-			Item.useTime = (int)((baseSpeed + baseSpeedBonus) * (speedMult/100) + 1); //Usetime calc
-			Item.shootSpeed = ((baseVelocity + baseVelocityBonus) * (velocityMultiplier/100) + 1);
+			Item.useTime = (int)((baseSpeed + baseSpeedBonus) * (speedMult/100) + 1); //Usetime calc. Note that the mult is being divided by 100
+			Item.shootSpeed = ((baseVelocity + baseVelocityBonus) * (velocityMult/100) + 1); //Velocity calc. It adds 1 so the values can be easy to read
 			Item.crit = baseCrit + critBonus;
-			overheat = (int)((baseOverheat + baseOverheatBonus) * (overheatMultiplier / 100) + 1);
+			overheat = (int)((baseOverheat + baseOverheatBonus) * (overheatMult / 100) + 1);
 
 		}
 
@@ -278,7 +301,7 @@ namespace MetroidMod.Content.Items.Weapons
 			float speedY = velocity.Y;
 			BeamShot2 beam = (Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, player.whoAmI).ModProjectile) as BeamShot2;
 			beam.VisualWinners = VisualDinners;
-			beam.
+			
 			mp.statOverheat += MGlobalItem.AmmoUsage(player, overheat * mp.overheatCost);
 			return false;
 		}

@@ -14,7 +14,12 @@ using MetroidMod.Default;
 namespace MetroidMod
 {
 	/// <summary>
-	/// The base type for all Power Beam addons.
+	/// The base type for all Power Beam addons.<br/>
+	/// ModBeamAddons automatically generate a <see cref="Terraria.ModLoader.ModItem"/> and a <see cref="Terraria.ModLoader.ModTile"/> to access the addon in-game.<br/>
+	/// Textures are grabbed automatically at this filepath:<br/>
+	/// <u>(name of mod)<b>/Assets/Textures/BeamAddons/</b>(name of addon file)<b>/</b>(Item for item sprite, Tile for tile sprite, Shot for shot sprite, etc.)</u><br/>
+	/// but can be overriden to point to any filepath. Sounds are also stored this way, just swap Textures for Sounds.<br/>
+	/// Every
 	/// </summary>
 	public abstract class ModBeamAddon : ModType
 	{
@@ -95,32 +100,39 @@ namespace MetroidMod
 
 		//Visual Priority System variables
 		/// <summary>
-		/// Determines the level of priority of the addon's shot graphics.<br />
+		/// Determines the level of priority of the addon's <b>shot texture</b>.<br />
 		/// 0 is the lowest, 5 is the highest<br />
-		/// If the addon has the highest shape priority currently installed, its shot graphics will be used.<br />
-		/// In the case of a tie, graphics are decided by slot priority.<br />
-		/// Slot shape priority highest to lowest: Primary B, Primary A, Secondary, Utility, Charge
+		/// If the addon has the <i>highest shape priority currently installed</i>, its shot graphics will be used.<br />
+		/// In the case of a tie, graphics are decided by slot priority.<br/>
+		/// Slot shape priority highest to lowest: Secondary(4), Spread(3), Ion(2), Ability(1), Primary(0)
 		/// </summary>
 		public int ShapePriority;
 		/// <summary>
-		/// Determines the level of priority of the addon's shot color.<br />
+		/// Determines the level of priority of the addon's <b>shot color</b>.<br />
 		/// 0 is the lowest, 5 is the highest<br />
-		/// If the addon has the highest color priority installed, its shot color will be used.<br />
+		/// If the addon has the <i>highest color priority currently installed</i>, its shot color will be used.<br />
 		/// In the case of a tie, color is decided by slot priority.<br />
-		/// Slot color priority highest to lowest: Utility, Primary B, Secondary, Primary A, Charge
+		/// Slot color priority highest to lowest: Ability(1), Secondary(4), Ion(2), Spread(3), Primary(0)
 		/// </summary>
 		public int ColorPriority;
 		/// <summary>
-		/// If true, addon's visuals completely override the priority system.<br/>
+		/// If true, addon's visuals <b>completely override the priority system.</b><br/>
 		/// Intended for use on Special Beams, like Hyper and Phazon<br/>
 		/// Checks each addon in sequential order; 1, 2, yadda yadda.<br/>
-		/// (stands for Very Important Beam)
+		/// <i>(stands for Very Important Beam)</i>
 		/// </summary>
 		public bool VIB = false;
 
 		//Addon stat variables
 		/// <summary>
-		/// The slot in the Addon UI that this addon uses.
+		/// The slot in the Addon UI that this addon uses.<br/><br/>
+		/// General rule of thumb for what to put where:<br/>
+		/// <u><see cref="BeamAddonSlotID.Primary"/></u> is the <b>base</b> upon which other addons modify, and can be stored in <b>Quick-Swap</b> to change weapons on the fly. Things like the Charge Beam go here.<br/>
+		/// <u><see cref="BeamAddonSlotID.Ability"/></u> is for addons that <b>apply after-effects</b> to your beam shot, like the Ice Beam.<br/>
+		/// <u><see cref="BeamAddonSlotID.Ion"/></u> is for addons that affect how the beam <b>interacts with terrain</b>, like the Wave Beam.<br/>
+		/// <u><see cref="BeamAddonSlotID.Spread"/></u> is for addons that affect <b>how your projectiles come out</b>, like the Spazer Beam.<br/>
+		/// <u><see cref="BeamAddonSlotID.Secondary"/></u> is for addons that affect how the beam <b>interacts with enemies</b>, like the Plasma Beam.<br/>
+		/// <u><see cref="BeamAddonSlotID.Ammo"/></u> is <i>exclusively</i> for ammunition, like UA Expansions. <b>This slot does not get checked with the others.</b>
 		/// </summary> 
 		public virtual int AddonSlot { get; set; } = BeamAddonSlotID.None;
 		/// <summary>

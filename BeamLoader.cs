@@ -75,12 +75,12 @@ namespace MetroidMod
 		{
 			return AddonSlot switch
 			{
-				BeamAddonSlotID.Charge => "Charge",
-				BeamAddonSlotID.Secondary => "Secondary",
-				BeamAddonSlotID.Utility => "Utility",
-				BeamAddonSlotID.PrimaryA => "Primary A",
-				BeamAddonSlotID.PrimaryB => "Primary B",
-				BeamAddonSlotID.UA => "UA",
+				BeamAddonSlotID.Primary => "Charge",
+				BeamAddonSlotID.Ability => "Secondary",
+				BeamAddonSlotID.Ion => "Utility",
+				BeamAddonSlotID.Spread => "Primary A",
+				BeamAddonSlotID.Secondary => "Primary B",
+				BeamAddonSlotID.Ammo => "UA",
 				_ => "Unknown",
 			};
 		}
