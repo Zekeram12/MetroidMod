@@ -143,7 +143,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The Power Beam's base usetime, before accounting for addon multipliers.
 		/// </summary>
-		int baseSpeed = 10;
+		int baseSpeed = 8;
 		/// <summary>
 		/// The Power Beam's total additional base speed from installed addons.
 		/// </summary>
@@ -155,7 +155,7 @@ namespace MetroidMod.Content.Items.Weapons
 		/// <summary>
 		/// The Power Beam's total base velocity, before accounting for addon multipliers.
 		/// </summary>
-		float baseVelocity = 16f;
+		float baseVelocity = 24f;
 		/// <summary>
 		/// The Power Beam's total additional base velocity from installed addons.
 		/// </summary>
@@ -224,14 +224,14 @@ namespace MetroidMod.Content.Items.Weapons
 			Item.height = 20;
 			Item.DamageType = ModContent.GetInstance<HunterDamageClass>();
 			Item.useTime = baseSpeed;
-			Item.useAnimation = 14;
+			Item.useAnimation = baseSpeed;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.noMelee = true;
 			Item.knockBack = 0;
 			Item.value = 6969;
 			Item.rare = ItemRarityID.Green;
 			Item.UseSound = Sounds.Items.Weapons.PowerBeamSound;
-			//Item.shoot = ModContent.ProjectileType<BeamShot2>(); //Most of the cool shit happens on the projectile itself
+			Item.shoot = ModContent.ProjectileType<BeamShot2>(); //Most of the cool shit happens on the projectile itself
 			Item.shootSpeed = baseVelocity;
 			Item.crit = baseCrit;
 		}
@@ -248,8 +248,7 @@ namespace MetroidMod.Content.Items.Weapons
 		public override bool CanUseItem(Player player) //lets things properly restrict your ability to use the weapon
 		{
 			MPlayer mp = player.GetModPlayer<MPlayer>();
-			//return (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
-			return true;
+			return (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
 		}
 
 		public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
@@ -296,7 +295,7 @@ namespace MetroidMod.Content.Items.Weapons
 			MPlayer mp = player.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
 			
 			int[] VisualDinners = BeamAddonLoader.VisualPriority(BeamAddonModifier); //VisualDinners[0] is the winning ShapePriority, VisualDinners[1] is the winning ColorPriority
-			if (VisualDinners[0] == -1 || VisualDinners[1] == -1) { return true; } //If either value is -1 that either means something's fucky or there's no addons installed, meaning just go with default values
+			//if (VisualDinners[0] == -1 || VisualDinners[1] == -1) { return false; } //If either value is -1 that either means something's fucky or there's no addons installed, meaning just go with default values
 			Vector2 oPos = player.RotatedRelativePoint(player.MountedCenter, true);
 			float speedX = velocity.X;
 			float speedY = velocity.Y;

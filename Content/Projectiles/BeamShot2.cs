@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MetroidMod.Content.DamageClasses;
 using MetroidMod.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,6 +18,9 @@ namespace MetroidMod.Content.Projectiles
 		public int[] VisualWinners = [-1, -1];
 		public ModBeamAddon[] beamAddons = new ModBeamAddon[BeamAddonSlotID.Count]; 
 		public float beamScale = 0.75f;
+
+		public bool canPhase = true;
+		public int pierceNumber = 1;
 		public override string Texture => $"{nameof(MetroidMod)}/Assets/Textures/BeamAddons/PowerBeam/Shot";
 		Color color = MetroidMod.powColor;
 		public override void SetDefaults()
@@ -24,11 +28,19 @@ namespace MetroidMod.Content.Projectiles
 			Projectile.width = 8;
 			Projectile.height = 8;
 			Projectile.scale = 0.75f;
+			Projectile.friendly = true;
+			Projectile.tileCollide = true;
+			Projectile.ignoreWater = true;
+			Projectile.penetrate = 1;
+			Projectile.DamageType = ModContent.GetInstance<HunterDamageClass>();
+
 		}
 		public override void AI() //TODO: make a whole-ass thing
 		{
 			Projectile.rotation = (float)Math.Atan2((double)Projectile.velocity.Y, (double)Projectile.velocity.X) + MathHelper.PiOver2;
 			Lighting.AddLight(Projectile.Center, color.R / 255f, color.G / 255f, color.B / 255f);
+
+			
 
 			if (Projectile.numUpdates == 0)
 			{
@@ -52,9 +64,14 @@ namespace MetroidMod.Content.Projectiles
 			SoundEngine.PlaySound(sound, Projectile.Center);
 		}
 
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+		{
+			base.OnHitNPC(target, hit, damageDone);
+		}
+
 		public override bool PreDraw(ref Color lightColor)
 		{
-			if (VisualWinners[0] == -1 || VisualWinners[1] == -1 || beamAddons == null) { return true; }
+			if (VisualWinners[0] == -1 || VisualWinners[1] == -1 || beamAddons == null){ return true; }
 			ModBeamAddon beamShape = beamAddons[VisualWinners[0]];
 			ModBeamAddon beamColor = beamAddons[VisualWinners[1]];
 			Texture2D beamTex = (ModContent.Request<Texture2D>(beamShape.ShotTexture).Value);
