@@ -20,10 +20,16 @@ namespace MetroidMod.Common.Systems
 	internal class MUISystem : ModSystem
 	{
 		public static MUISystem Instance { get; private set; }
+		#region Old arm cannon UI things. Delete once the new system's up.
 		internal static UserInterface pbUserInterface;
 		internal static UserInterface bcUserInterface;
 		internal static UserInterface miUserInterface;
 		internal static UserInterface mcUserInterface;
+		#endregion
+		/// <summary>
+		/// The UI interface for the Arm Cannon.
+		/// </summary>
+		internal static UserInterface acUserInterface;
 		internal static UserInterface mbUserInterface;
 		internal static UserInterface suitUserInterface;
 		internal static UserInterface helmetUserInterface;
@@ -34,10 +40,13 @@ namespace MetroidMod.Common.Systems
 		internal static ChoziteDualtoolUI choziteDualtoolUI;
 
 		// bri'ish innit?
+		#region Old arm cannon UI things. Delete once the new system's up.
 		internal bool isPBInit = false;
 		internal bool isBCInit = false;
 		internal bool isMIInit = false;
 		internal bool isMCInit = false;
+		#endregion
+		internal bool isACInit = false;
 		internal bool isMBInit = false;
 		internal bool isSUInit = false;
 		internal bool isHELMInit = false;
@@ -55,10 +64,13 @@ namespace MetroidMod.Common.Systems
 			if (!Main.dedServ)
 			{
 				//addonsUI = new UI.AddonsUI();
+				#region Old arm cannon UI things. Delete once the new system's up.
 				pbUserInterface = new UserInterface();
 				bcUserInterface = new UserInterface();
 				miUserInterface = new UserInterface();
 				mcUserInterface = new UserInterface();
+				#endregion
+				acUserInterface = new UserInterface();
 				mbUserInterface = new UserInterface();
 				suitUserInterface = new UserInterface();
 				helmetUserInterface = new UserInterface();
@@ -92,10 +104,13 @@ namespace MetroidMod.Common.Systems
 
 		public override void Unload()
 		{
+			#region Old arm cannon UI things. Delete once the new system's up.
 			pbUserInterface = null;
 			bcUserInterface = null;
 			miUserInterface = null;
 			mcUserInterface = null;
+			#endregion
+			acUserInterface = null;
 			mbUserInterface = null;
 			suitUserInterface = null;
 			helmetUserInterface = null;
@@ -143,6 +158,12 @@ namespace MetroidMod.Common.Systems
 				mbUserInterface.SetState(new UI.MorphBallUI());
 				isMBInit = true;
 			}
+			if (!isACInit)
+			{
+				acUserInterface.SetState(new UI.ArmCannonUI());
+				isACInit = true;
+			}
+			#region Old arm cannon UI things. Delete once the new system's up.
 			if (!isMIInit)
 			{
 				miUserInterface.SetState(new UI.MissileLauncherUI());
@@ -163,6 +184,7 @@ namespace MetroidMod.Common.Systems
 				mcUserInterface.SetState(new UI.MissileChangeUI());
 				isMCInit = true;
 			}
+			#endregion
 			if (visorUserInterface != null && UI.VisorSelectUI.Visible)
 			{
 				visorUserInterface.Update(gameTime);
@@ -190,6 +212,10 @@ namespace MetroidMod.Common.Systems
 			if (mbUserInterface != null && UI.MorphBallUI.Visible)
 			{
 				mbUserInterface.Update(gameTime);
+			}
+			if (acUserInterface != null && UI.ArmCannonUI.Visible) 
+			{ 
+				acUserInterface.Update(gameTime);
 			}
 			if (miUserInterface != null && UI.MissileLauncherUI.Visible)
 			{
@@ -390,6 +416,7 @@ namespace MetroidMod.Common.Systems
 			int index = layers.FindIndex((GameInterfaceLayer layer) => layer.Name.Equals("Vanilla: Mouse Text"));
 			if (index != -1)
 			{
+				#region Old Arm Cannon things. Delete once the new system's up
 				layers.Insert(index, new LegacyGameInterfaceLayer(
 					"MetroidMod: Power Beam UI",
 					delegate {
@@ -436,6 +463,21 @@ namespace MetroidMod.Common.Systems
 						{
 							if (Main.hasFocus) { mcUserInterface.Recalculate(); }
 							mcUserInterface.Draw(Main.spriteBatch, Main._drawInterfaceGameTime);
+						}
+
+						return true;
+					},
+					InterfaceScaleType.UI)
+				);
+				#endregion
+				layers.Insert(index, new LegacyGameInterfaceLayer(
+					"MetroidMod: Arm Cannon UI",
+					delegate {
+						if (UI.ArmCannonUI.Visible)
+						{
+							if (Main.hasFocus) { acUserInterface.Recalculate();
+								acUserInterface.Draw(Main.spriteBatch, Main._drawInterfaceGameTime);
+							};
 						}
 
 						return true;
@@ -669,12 +711,13 @@ namespace MetroidMod.Common.Systems
 			Player P = Main.player[Main.myPlayer];
 			MPlayer mp = P.GetModPlayer<MPlayer>();
 			Item item = P.inventory[P.selectedItem];
+			MGlobalItem mItem = item.GetGlobalItem<MGlobalItem>();
 			if (P.whoAmI == Main.myPlayer && P.active && !P.dead && !P.ghost)
 			{
 				Texture2D texBar = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBar").Value,
 					texBarBorder = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBarBorder").Value,
 					texBarBorder2 = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBarBorder2").Value;
-				if (item.type == ModContent.ItemType<PowerBeam>() || item.type == ModContent.ItemType<MissileLauncher>() || item.type == ModContent.ItemType<ArmCannon>() || mp.ballstate || mp.PrimeHunter)
+				if (mItem.showChargeBar || mp.ballstate || mp.PrimeHunter)
 				{
 					int hp = (int)mp.hyperCharge, hpMax = (int)MPlayer.maxHyper;
 					int ch = (int)mp.statCharge, chMax = (int)MPlayer.maxCharge;

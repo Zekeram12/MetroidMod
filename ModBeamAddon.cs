@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
 using Terraria;
 using MetroidMod.ID;
 using MetroidMod.Default;
+using Terraria.Audio;
 
 //gonna document as much of the code as I can to make it easy to follow
 namespace MetroidMod
 {
 	/// <summary>
-	/// The base type for all Power Beam addons.<br/>
+	/// The base type for all Power Beam addons.<br/><br/>
 	/// ModBeamAddons automatically generate a <see cref="Terraria.ModLoader.ModItem"/> and a <see cref="Terraria.ModLoader.ModTile"/> to access the addon in-game.<br/>
 	/// Textures are grabbed automatically at this filepath:<br/>
 	/// <u>(name of mod)<b>/Assets/Textures/BeamAddons/</b>(name of addon file)<b>/</b>(Item for item sprite, Tile for tile sprite, Shot for shot sprite, etc.)</u><br/>
-	/// but can be overriden to point to any filepath. Sounds are also stored this way, just swap Textures for Sounds.<br/>
-	/// Every
+	/// but can be overriden to point to any filepath. Sounds are also stored this way, just swap Textures for Sounds.<br/><br/>
+	/// Every ModBeamAddon needs an <b>AddonSlot</b>, <b>ShapePriority</b>, and <b>ColorPriority</b>.
 	/// </summary>
 	public abstract class ModBeamAddon : ModType
 	{
@@ -56,7 +53,7 @@ namespace MetroidMod
 		/// </summary>
 		public virtual LocalizedText Tooltip => ModItem.GetLocalization(nameof(Tooltip), () => "");
 
-		//Appearance variables
+		#region Appearance variables
 		/// <summary>
 		/// The filepath for the addon's item texture.
 		/// </summary>
@@ -72,7 +69,7 @@ namespace MetroidMod
 		/// <summary>
 		/// The amount of animation frames in the normal shot texture.
 		/// </summary>
-		public int ShotFrames { get; } = 1;
+		public virtual int ShotFrames { get; } = 1;
 		/// <summary>
 		/// The filepath for the addon's shot sound effect.
 		/// </summary>
@@ -87,7 +84,7 @@ namespace MetroidMod
 		public int ChargeShotFrames { get; } = 1;
 		/// <summary>
 		/// The filepath for the addon's charged shot sound effect.
-		/// </summary>
+		/// </summary> 
 		public virtual string ChargeShotSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/ChargeShot";
 		/// <summary>
 		/// The filepath for the addon's shot/charged shot impact sound effect.
@@ -97,8 +94,9 @@ namespace MetroidMod
 		/// The color of the addon's projectile.
 		/// </summary>
 		public abstract Color ShotColor { get; }
+		#endregion
 
-		//Visual Priority System variables
+		#region Visual Priority System variables
 		/// <summary>
 		/// Determines the level of priority of the addon's <b>shot texture</b>.<br />
 		/// 0 is the lowest, 5 is the highest<br />
@@ -106,7 +104,7 @@ namespace MetroidMod
 		/// In the case of a tie, graphics are decided by slot priority.<br/>
 		/// Slot shape priority highest to lowest: Secondary(4), Spread(3), Ion(2), Ability(1), Primary(0)
 		/// </summary>
-		public int ShapePriority;
+		public abstract int ShapePriority { get; }
 		/// <summary>
 		/// Determines the level of priority of the addon's <b>shot color</b>.<br />
 		/// 0 is the lowest, 5 is the highest<br />
@@ -114,25 +112,21 @@ namespace MetroidMod
 		/// In the case of a tie, color is decided by slot priority.<br />
 		/// Slot color priority highest to lowest: Ability(1), Secondary(4), Ion(2), Spread(3), Primary(0)
 		/// </summary>
-		public int ColorPriority;
+		public abstract int ColorPriority { get; }
 		/// <summary>
 		/// If true, addon's visuals <b>completely override the priority system.</b><br/>
 		/// Intended for use on Special Beams, like Hyper and Phazon<br/>
 		/// Checks each addon in sequential order; 1, 2, yadda yadda.<br/>
+		/// Defaults to <b>false.</b><br/>
 		/// <i>(stands for Very Important Beam)</i>
 		/// </summary>
-		public bool VIB = false;
+		public virtual bool VIB { get; } = false;
+		#endregion
 
-		//Addon stat variables
+		#region Addon stat variables
 		/// <summary>
 		/// The slot in the Addon UI that this addon uses.<br/><br/>
-		/// General rule of thumb for what to put where:<br/>
-		/// <u><see cref="BeamAddonSlotID.Primary"/></u> is the <b>base</b> upon which other addons modify, and can be stored in <b>Quick-Swap</b> to change weapons on the fly. Things like the Charge Beam go here.<br/>
-		/// <u><see cref="BeamAddonSlotID.Ability"/></u> is for addons that <b>apply after-effects</b> to your beam shot, like the Ice Beam.<br/>
-		/// <u><see cref="BeamAddonSlotID.Ion"/></u> is for addons that affect how the beam <b>interacts with terrain</b>, like the Wave Beam.<br/>
-		/// <u><see cref="BeamAddonSlotID.Spread"/></u> is for addons that affect <b>how your projectiles come out</b>, like the Spazer Beam.<br/>
-		/// <u><see cref="BeamAddonSlotID.Secondary"/></u> is for addons that affect how the beam <b>interacts with enemies</b>, like the Plasma Beam.<br/>
-		/// <u><see cref="BeamAddonSlotID.Ammo"/></u> is <i>exclusively</i> for ammunition, like UA Expansions. <b>This slot does not get checked with the others.</b>
+		/// See <see cref="BeamAddonSlotID"/> for details on the different slots.
 		/// </summary> 
 		public virtual int AddonSlot { get; set; } = BeamAddonSlotID.None;
 		/// <summary>
@@ -184,7 +178,7 @@ namespace MetroidMod
 		/// (i.e. if the addon should have a -50% overheat multiplier, put -50f instead of 0.5f)
 		/// </summary>
 		public virtual float OverheatMult { get; set; } = 0f;
-
+		#endregion
 
 
 
@@ -194,6 +188,12 @@ namespace MetroidMod
 		/// Good for... something, I think   -Z
 		/// </summary>
 		public abstract bool AddOnlyAddonItem { get; }
+
+		public override sealed void SetupContent()
+		{
+			SetStaticDefaults();
+			ModItem.SetStaticDefaults();
+		}
 
 		public override void Load()
 		{

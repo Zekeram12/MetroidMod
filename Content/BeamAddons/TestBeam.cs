@@ -15,14 +15,15 @@ namespace MetroidMod.Content.BeamAddons
 	{
 		int bd = 50;
 		int bs = -5;
+
+		public override int ShapePriority => 1;
+		public override int ColorPriority => 3;
 		public override bool AddOnlyAddonItem => false;
 
 		public override Color ShotColor => new(0, 0, 255);
 
 		public override void SetStaticDefaults()
 		{
-			ShapePriority = 1;
-			ColorPriority = 3;
 			AddonSlot = BeamAddonSlotID.Secondary;
 			BaseDamage = bd;
 			BaseSpeed = bs;
@@ -30,10 +31,10 @@ namespace MetroidMod.Content.BeamAddons
 
 		public override void SetItemDefaults(Item item)
 		{
-			Item.width = 16;
-			Item.height = 16;
-			Item.value = Item.buyPrice(0, 6, 9, 0);
-			Item.rare = ItemRarityID.Cyan;
+			item.width = 16;
+			item.height = 16;
+			item.value = Item.buyPrice(0, 6, 9, 0);
+			item.rare = ItemRarityID.Cyan;
 		}
 	}
 }

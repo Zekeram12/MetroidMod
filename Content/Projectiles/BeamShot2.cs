@@ -19,7 +19,7 @@ namespace MetroidMod.Content.Projectiles
 		public ModBeamAddon[] beamAddons = new ModBeamAddon[BeamAddonSlotID.Count]; 
 		public float beamScale = 0.75f;
 
-		public bool canPhase = true;
+		public bool canPhase = false;
 		public int pierceNumber = 1;
 		public override string Texture => $"{nameof(MetroidMod)}/Assets/Textures/BeamAddons/PowerBeam/Shot";
 		Color color = MetroidMod.powColor;
@@ -60,8 +60,16 @@ namespace MetroidMod.Content.Projectiles
 				Main.dust[dust].velocity = new Vector2((Main.rand.Next(freq) - (freq / 2)) * 0.125f, (Main.rand.Next(freq) - (freq / 2)) * 0.125f);
 				Main.dust[dust].noGravity = noGravity;
 			}
-			SoundStyle sound = new($"{MetroidMod.Instance.Name}/Assets/Sounds/BeamImpactSound");
-			SoundEngine.PlaySound(sound, Projectile.Center);
+			if (VisualWinners[0] != -1)
+			{
+				SoundStyle sound = new($"{MetroidMod.Instance.Name}/Assets/Sounds/BeamImpactSound");
+				SoundEngine.PlaySound(sound, Projectile.Center);
+			}
+			else
+			{
+				SoundStyle sound = new(beamAddons[VisualWinners[0]].ImpactSound);
+				SoundEngine.PlaySound(sound, Projectile.Center);
+			}
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

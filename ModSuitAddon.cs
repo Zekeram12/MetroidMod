@@ -91,7 +91,10 @@ namespace MetroidMod
 		/// Used for Barrier addons. Set to true if the suit should override the shoulders of the Primary addon.
 		/// </summary>
 		public bool ShouldOverrideShoulders { get; set; } = false;
-
+		/// <summary>
+		/// The Power Suit slot the addon uses.<br/><br/>
+		/// See <see cref="SuitAddonSlotID"/> for what the slots are for.
+		/// </summary>
 		public virtual int AddonSlot { get; set; } = SuitAddonSlotID.None;
 		/// <summary>
 		/// Determines if textures should load. If it's null, it will not try to create textures
