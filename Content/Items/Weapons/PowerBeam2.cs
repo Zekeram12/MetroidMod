@@ -476,6 +476,36 @@ namespace MetroidMod.Content.Items.Weapons
 		}
 
 		#region Data Preservation
+
+		//This is to prevent arrays from being null on creation
+		public override void OnCreated(ItemCreationContext context)
+		{
+			base.OnCreated(context);
+			beamAddons = new Item[BeamAddonSlotID.Count];
+			for (int i = 0; i < beamAddons.Length; ++i)
+			{
+				beamAddons[i] = new Item();
+				beamAddons[i].TurnToAir();
+			}
+			chargeQuickSwap = new Item[8];
+			for (int i = 0; i < 8; ++i)
+			{
+				chargeQuickSwap[i] = new Item();
+				chargeQuickSwap[i].TurnToAir();
+			}
+			missileAddons = new Item[MissileAddonSlotID.Count];
+			for(int i = 0;i < missileAddons.Length; ++i)
+			{
+				missileAddons[i] = new Item();
+				missileAddons[i].TurnToAir();
+			}
+			comboQuickChange = new Item[8];
+			for (int i = 0;i < 8; ++i)
+			{
+				comboQuickChange[i] = new Item();
+				comboQuickChange[i].TurnToAir();
+			}
+		}
 		public override ModItem Clone(Item newEntity)
 		{
 			//Make sure the clone has all the same addons as the original
@@ -610,12 +640,6 @@ namespace MetroidMod.Content.Items.Weapons
 				}
 				tag.Add("Charge Combo Quick-Swap - Slot " + (i + 1), ItemIO.Save(comboQuickChange[i]));
 			}
-
-			//priority winners
-			for (int i = 0; i < 2; ++i)
-			{
-				tag.Add("Beam Visual Settings - Data Point " + (i + 1), VisualDinners[i]);
-			}
 			#endregion
 			//ammo
 			if (Item.TryGetGlobalItem(out MGlobalItem ac))
@@ -656,11 +680,6 @@ namespace MetroidMod.Content.Items.Weapons
 					Item item = tag.Get<Item>("Charge Combo Quick-Swap - Slot " + (i + 1));
 					comboQuickChange[i] = item;
 				}
-
-				for (int i = 0; i < 2; i++)
-				{
-					VisualDinners[i] = tag.Get<int>("Beam Visual Settings - Data Point " + (i + 1));
-				}
 				#endregion
 				MGlobalItem ac = Item.GetGlobalItem<MGlobalItem>();
 				ac.maxUA = tag.GetInt("Maximum UA");
@@ -669,7 +688,9 @@ namespace MetroidMod.Content.Items.Weapons
 				ac.statMissiles = tag.GetInt("Current Missiles");
 			}
 			catch { }
+			ArrayUpdate();
 		}
+
 		#endregion
 	}
 }

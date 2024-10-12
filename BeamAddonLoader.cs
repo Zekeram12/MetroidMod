@@ -114,6 +114,7 @@ namespace MetroidMod
 			int[] fuckYouIceBeam = new int[addons.Length]; //store all the ColorPriority check results here at Big Zek Hell's Arrays
 			int[] winners;
 
+
 			MetroidMod.Instance.Logger.Info("Starting VIBe check");
 			for (int i = 0; i < addons.Length - 1; ++i) //Check all addon slots for if VIB is true
 			{
@@ -122,6 +123,8 @@ namespace MetroidMod
 				if (addons[i].VIB == true) { winners = [i, i]; MetroidMod.Instance.Logger.Info("Slot " + i + " passed the VIBe Check"); return winners; }
 			}
 			MetroidMod.Instance.Logger.Info("You have failed the VIBe Check");
+
+
 			//special thanks to my buddy Snek for this stuff, I was prolly just gonna do a buncha else-ifs lol    -Z
 			int highestShapePriorityIndex = -1;  //Compare ShapePriority values of all installed beams, determine which is the highest
 			int highestShapePriority = -1;
@@ -137,6 +140,8 @@ namespace MetroidMod
 				}
 			}
 			MetroidMod.Instance.Logger.Info("Result: Slot " + highestShapePriorityIndex);
+
+
 			for (int i = 0; i < addons.Length - 1; ++i) //Compare ColorPriority values of all installed beams, determine which is the highest
 			{
 				if (addons[i] == null) { fuckYouIceBeam[i] = -1; continue; }
@@ -156,6 +161,8 @@ namespace MetroidMod
 					highestColorPriority = colorOrder[i].ColorPriority;
 				}
 			}
+
+
 			MetroidMod.Instance.Logger.Info("Result: Slot " + highestShapePriorityIndex);
 			winners = [highestShapePriorityIndex, highestColorPriorityIndex]; //If there are no winners it should turn up -1, -1
 			MetroidMod.Instance.Logger.Info("winners value: [" + highestShapePriorityIndex + ", " + highestColorPriorityIndex + "]");
@@ -180,6 +187,8 @@ namespace MetroidMod
 			}
 			return sum;
 		}
+
+		#region Addon stat stackers
 		/// <summary>
 		/// Combines the damage multipliers of every installed addon into a single value.
 		/// </summary>
@@ -324,9 +333,10 @@ namespace MetroidMod
 			}
 			return sum;
 		}
+		#endregion
 
 
-		//The following methods are simply some under-the-hood stuff to make sure things actually load properly.
+		#region Under-the-hood stuff
 		internal static void ReloadTypes(TagCompound unloadedTag)
 		{
 			unloadedAddons.Clear();
@@ -363,5 +373,6 @@ namespace MetroidMod
 			addons.Clear();
 			unloadedAddons.Clear();
 		}
+		#endregion
 	}
 }
