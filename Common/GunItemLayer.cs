@@ -14,7 +14,7 @@ namespace MetroidMod.Common
 	{
 		public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.ArmOverItem);
 		public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) =>
-			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>() ||
+			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam2>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>();
@@ -22,19 +22,19 @@ namespace MetroidMod.Common
 		{
 			Player P = drawInfo.drawPlayer;
 			Item I = P.inventory[P.selectedItem];
+			MGlobalItem ac = I.GetGlobalItem<MGlobalItem>();
 			MPlayer mPlayer = P.GetModPlayer<MPlayer>();
 			if (drawInfo.shadow != 0f || P.frozen || ((P.itemAnimation <= 0 || I.useStyle == 0) && (I.holdStyle <= 0 || P.pulley)) || I.type <= 0 || P.dead || I.noUseGraphic || (P.wet && I.noWet) || mPlayer.somersault)
 			{
 				return;
 			}
 
-			if (I.type == ModContent.ItemType<Content.Items.Weapons.PowerBeam2>()|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>())
+			if (ac.showOnHand == true|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>())
 			{
 				Texture2D tex = Terraria.GameContent.TextureAssets.Item[I.type].Value;
-				MGlobalItem mi = I.GetGlobalItem<MGlobalItem>();
-				if (mi.itemTexture != null)
+				if (ac.itemTexture != null)
 				{
-					tex = mi.itemTexture;
+					tex = ac.itemTexture;
 				}
 				Color currentColor = Lighting.GetColor((int)((double)drawInfo.Position.X + (double)P.width * 0.5) / 16, (int)(((double)drawInfo.Position.Y + (double)P.height * 0.5) / 16.0));
 
@@ -59,7 +59,7 @@ namespace MetroidMod.Common
 	{
 		public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.HandOnAcc);
 		public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) =>
-			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>() ||
+			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam2>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>() ||
 			drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>();
@@ -69,7 +69,7 @@ namespace MetroidMod.Common
 			MPlayer mPlayer = P.GetModPlayer<MPlayer>();
 			Item I = P.inventory[P.selectedItem];
 			int frame = (P.bodyFrame.Y / P.bodyFrame.Height);
-			if ((I.type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>()|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>()) && ((P.itemAnimation == 0 && (frame < 1 || frame > 4)) || (mPlayer.statCharge > 0 && mPlayer.somersault)) && !P.dead)
+			if ((I.type == ModContent.ItemType<Content.Items.Weapons.PowerBeam2>()|| I.type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>() || I.type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || I.type == ModContent.ItemType<Content.Items.Tools.NovaLaserDrill>()) && ((P.itemAnimation == 0 && (frame < 1 || frame > 4)) || (mPlayer.statCharge > 0 && mPlayer.somersault)) && !P.dead)
 			{
 				Texture2D tex = Terraria.GameContent.TextureAssets.Item[I.type].Value;//Main.itemTexture[I.type];
 				MGlobalItem mi = I.GetGlobalItem<MGlobalItem>();

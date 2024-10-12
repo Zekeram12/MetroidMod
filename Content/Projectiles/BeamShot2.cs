@@ -62,12 +62,12 @@ namespace MetroidMod.Content.Projectiles
 			}
 			if (VisualWinners[0] != -1)
 			{
-				SoundStyle sound = new($"{MetroidMod.Instance.Name}/Assets/Sounds/BeamImpactSound");
+				SoundStyle sound = new(beamAddons[VisualWinners[0]].ImpactSound);
 				SoundEngine.PlaySound(sound, Projectile.Center);
 			}
 			else
 			{
-				SoundStyle sound = new(beamAddons[VisualWinners[0]].ImpactSound);
+				SoundStyle sound = new($"{MetroidMod.Instance.Name}/Assets/Sounds/BeamImpactSound");
 				SoundEngine.PlaySound(sound, Projectile.Center);
 			}
 		}
@@ -82,9 +82,10 @@ namespace MetroidMod.Content.Projectiles
 			if (VisualWinners[0] == -1 || VisualWinners[1] == -1 || beamAddons == null){ return true; }
 			ModBeamAddon beamShape = beamAddons[VisualWinners[0]];
 			ModBeamAddon beamColor = beamAddons[VisualWinners[1]];
+			MetroidMod.Instance.Logger.Info(" Projectile renderin' time.\nTexture path: " + beamShape.ShotTexture);
 			Texture2D beamTex = (ModContent.Request<Texture2D>(beamShape.ShotTexture).Value);
 			lightColor = beamColor.ShotColor;
-			Main.EntitySpriteDraw(beamTex, Projectile.position, null, beamColor.ShotColor, Projectile.rotation, 
+			Main.EntitySpriteDraw(beamTex, Projectile.Center - Main.screenPosition, null, beamColor.ShotColor, Projectile.rotation, 
 								  new Vector2(beamTex.Width / 2, beamTex.Height / 2), beamScale, SpriteEffects.None);
 			return false;
 		}

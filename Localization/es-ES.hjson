@@ -26,7 +26,7 @@ Mods: {
 			/* TotalStoredReserveHearts:
 				'''
 				Stores up to {0} {^0:heart;hearts} picked up at full health
-				Automatically uses stored hearts to save you from death
+				Automatically uses {^0:the stored heart;stored hearts} to save you from death
 				''' */
 			// SomersaultEnabled: Allows somersaulting
 			/* IsSuitAddon:
@@ -3453,7 +3453,12 @@ Mods: {
 
 			TestBeamAddon: {
 				// DisplayName: Test Beam
-				// Tooltip: This is a test addon!
+				/* Tooltip:
+					'''
+					{$CommonItemTooltip.IsBeamAddon}Secondary
+					You SHOULD have this, actually
+					at least until I start guttin' shit
+					''' */
 			}
 		}
 
@@ -3938,7 +3943,7 @@ Mods: {
 			// ChozoRapierStab.DisplayName: Chozo Rapier Stab
 			// ChozoSawProjectile.DisplayName: Powered Chozite Saw
 			// OrbBomb.DisplayName: Orb Bomb
-			// BeamShot2.DisplayName: Beam Shot2
+			// BeamShot2.DisplayName: COME UP WITH WAY TO REPLACE NAME LATER
 		}
 
 		Configs: {
@@ -4096,8 +4101,8 @@ Mods: {
 					// Tooltip: ""
 				}
 
-				PsuedoScrewAttack: {
-					// Label: Psuedo Screw Attack
+				PseudoScrewAttack: {
+					// Label: Pseudo-Screw Attack
 					// Tooltip: ""
 				}
 

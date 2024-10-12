@@ -33,6 +33,16 @@ namespace MetroidMod.Common.GlobalItems
 		#endregion
 
 		// float because funi - ChaosInsurgent49
+		/// <summary>
+		/// If <b>true</b>, display the Charge Bar.
+		/// <br/><br/>Defaults to <b>false</b>.
+		/// </summary>
+		public bool showChargeBar = false;
+		/// <summary>
+		/// If <b>true</b>, render the item on the player character's front arm.
+		/// <br/><br/>Defaults to <b>false</b>/
+		/// </summary>
+		public bool showOnHand = false;
 		public float statUA = 40f;
 		public int maxUA = 400;
 		public int statMissiles = 5;
@@ -95,13 +105,13 @@ namespace MetroidMod.Common.GlobalItems
 		{
 			MPlayer mp = P.GetModPlayer<MPlayer>();
 			bool pseudoScrew = (mp.statCharge >= MPlayer.maxCharge && mp.somersault);
-			if (mp.hyperColors > 0 || mp.speedBoosting || mp.shineActive || (pseudoScrew && mp.psuedoScrewFlash >= 3) || (mp.shineCharge > 0 && mp.shineChargeFlash >= 4))
+			if (mp.hyperColors > 0 || mp.speedBoosting || mp.shineActive || (pseudoScrew && mp.pseudoScrewFlash >= 3) || (mp.shineCharge > 0 && mp.shineChargeFlash >= 4))
 			{
 				if (mp.hyperColors > 0)
 				{
 					color = P.GetImmuneAlphaPure(new Color(mp.r, mp.g, mp.b, 255), shadow);
 				}
-				else if (pseudoScrew && mp.psuedoScrewFlash >= 3)
+				else if (pseudoScrew && mp.pseudoScrewFlash >= 3)
 				{
 					color = P.GetImmuneAlphaPure(mp.chargeColor, shadow);
 				}

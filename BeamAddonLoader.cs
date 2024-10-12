@@ -104,31 +104,39 @@ namespace MetroidMod
 		/// <param name="slot4"></param>
 		/// <param name="slot5"></param>
 		/// <returns></returns>
-		public static int[] VisualPriority(ModBeamAddon[] addons)
+		public static int[] VisualPriority(Item[] beamAddons)
 		{
 			//let it be known there was originally gonna be a third array here for the VIB(e) check results called vibRibbon        -Z
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(selector: GetAddon)
+				.ToArray();
 			int[] shapeOfPew = new int[addons.Length]; //store all the ShapePriority check results (I couldn't come up with a secondary joke (mostly because I didn't feel like trying))
 			int[] fuckYouIceBeam = new int[addons.Length]; //store all the ColorPriority check results here at Big Zek Hell's Arrays
-			int[] winners = new int[2];
+			int[] winners;
 
+			MetroidMod.Instance.Logger.Info("Starting VIBe check");
 			for (int i = 0; i < addons.Length - 1; ++i) //Check all addon slots for if VIB is true
 			{
+				MetroidMod.Instance.Logger.Info("VIBe Check - Slot " + i + "\nContains: " + addons[i]);
 				if (addons[i] == null || addons[i].VIB == false) { continue; }
-				if (addons[i].VIB == true) { winners = [i, i]; return winners; }
+				if (addons[i].VIB == true) { winners = [i, i]; MetroidMod.Instance.Logger.Info("Slot " + i + " passed the VIBe Check"); return winners; }
 			}
-
-
+			MetroidMod.Instance.Logger.Info("You have failed the VIBe Check");
+			//special thanks to my buddy Snek for this stuff, I was prolly just gonna do a buncha else-ifs lol    -Z
 			int highestShapePriorityIndex = -1;  //Compare ShapePriority values of all installed beams, determine which is the highest
 			int highestShapePriority = -1;
+			MetroidMod.Instance.Logger.Info("Starting shape priority check \nValue starts at -1");
 			for (int i = 0; i < addons.Length - 1; i++)
 			{
+				MetroidMod.Instance.Logger.Info("Shape Priority Check - Slot " + i + "\nContains: " + addons[i]);
 				if (addons[i]?.ShapePriority >= highestShapePriority)
 				{
+					MetroidMod.Instance.Logger.Info("Value is workable");
 					highestShapePriorityIndex = i;
 					highestShapePriority = addons[i].ShapePriority;
 				}
 			}
-
+			MetroidMod.Instance.Logger.Info("Result: Slot " + highestShapePriorityIndex);
 			for (int i = 0; i < addons.Length - 1; ++i) //Compare ColorPriority values of all installed beams, determine which is the highest
 			{
 				if (addons[i] == null) { fuckYouIceBeam[i] = -1; continue; }
@@ -137,15 +145,20 @@ namespace MetroidMod
 			ModBeamAddon[] colorOrder = [addons[BeamAddonSlotID.Primary], addons[BeamAddonSlotID.Spread], addons[BeamAddonSlotID.Ion], addons[BeamAddonSlotID.Secondary], addons[BeamAddonSlotID.Ability]]; //something something 20XX
 			int highestColorPriorityIndex = -1;
 			int highestColorPriority = -1;
+			MetroidMod.Instance.Logger.Info("Starting color priority check \nValue starts at -1");
 			for (int i = 0; i < colorOrder.Length; i++)
 			{
+				MetroidMod.Instance.Logger.Info("Color Priority Check - Slot " + i + "\nContains: " + colorOrder[i]);
 				if (colorOrder[i]?.ColorPriority >= highestColorPriority)
 				{
-					highestColorPriorityIndex = i;
-					highestColorPriority = addons[i].ColorPriority;
+					MetroidMod.Instance.Logger.Info("Value is workable");
+					highestColorPriorityIndex = colorOrder[i].AddonSlot;
+					highestColorPriority = colorOrder[i].ColorPriority;
 				}
 			}
+			MetroidMod.Instance.Logger.Info("Result: Slot " + highestShapePriorityIndex);
 			winners = [highestShapePriorityIndex, highestColorPriorityIndex]; //If there are no winners it should turn up -1, -1
+			MetroidMod.Instance.Logger.Info("winners value: [" + highestShapePriorityIndex + ", " + highestColorPriorityIndex + "]");
 			return winners;
 		}
 
@@ -154,8 +167,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static int BaseDamageStacker(ModBeamAddon[] addons)
+		public static int BaseDamageStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			int sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -169,8 +185,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static float DamageMultStacker(ModBeamAddon[] addons)
+		public static float DamageMultStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			float sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -184,8 +203,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static int BaseSpeedStacker(ModBeamAddon[] addons)
+		public static int BaseSpeedStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			int sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -199,8 +221,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static float SpeedMultStacker(ModBeamAddon[] addons)
+		public static float SpeedMultStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			float sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -214,8 +239,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static float BaseVelocityStacker(ModBeamAddon[] addons)
+		public static float BaseVelocityStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			float sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -229,8 +257,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static float VelocityMultStacker(ModBeamAddon[] addons)
+		public static float VelocityMultStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			float sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -244,8 +275,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static int CritChanceStacker(ModBeamAddon[] addons)
+		public static int CritChanceStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			int sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -259,8 +293,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static int BaseOverheatStacker(ModBeamAddon[] addons)
+		public static int BaseOverheatStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			int sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
@@ -274,8 +311,11 @@ namespace MetroidMod
 		/// </summary>
 		/// <param name="addons"></param>
 		/// <returns></returns>
-		public static float OverheatMultStacker(ModBeamAddon[] addons)
+		public static float OverheatMultStacker(Item[] beamAddons)
 		{
+			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
+				.Select(GetAddon)
+				.ToArray();
 			float sum = 0;
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{

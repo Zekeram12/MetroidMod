@@ -89,7 +89,7 @@ namespace MetroidMod
 		/// <summary>
 		/// The filepath for the addon's shot/charged shot impact sound effect.
 		/// </summary>
-		public virtual string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/Impact";
+		public virtual string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamImpactSound";
 		/// <summary>
 		/// The color of the addon's projectile.
 		/// </summary>

@@ -743,8 +743,8 @@ namespace MetroidMod.Common.UI
 				Main.LocalPlayer.mouseInterface = true;
 			}
 
-			enabled = MConfigClient.Instance.PsuedoScrewAttack.enabled;
-			if (!enabled && MConfigClient.Instance.PsuedoScrewAttack.auto)
+			enabled = MConfigClient.Instance.PseudoScrewAttack.enabled;
+			if (!enabled && MConfigClient.Instance.PseudoScrewAttack.auto)
 			{
 				Left.Pixels = 112;
 				Top.Pixels = 274;
@@ -762,7 +762,7 @@ namespace MetroidMod.Common.UI
 		{
 			MPlayer mp = Main.LocalPlayer.GetModPlayer<MPlayer>();
 
-			mp.psuedoScrewActive = !mp.psuedoScrewActive;
+			mp.pseudoScrewActive = !mp.pseudoScrewActive;
 			SoundEngine.PlaySound(SoundID.MenuTick);
 			clicked = true;
 		}
@@ -772,7 +772,7 @@ namespace MetroidMod.Common.UI
 			MPlayer mp = Main.LocalPlayer.GetModPlayer<MPlayer>();
 
 			Texture2D tex = buttonTex, texH = buttonTex_Hover, texC = buttonTex_Click;
-			if (mp.psuedoScrewActive)
+			if (mp.pseudoScrewActive)
 			{
 				tex = buttonTexEnabled;
 				texH = buttonTexEnabled_Hover;
@@ -789,7 +789,7 @@ namespace MetroidMod.Common.UI
 				}
 
 				string psText = "Charge Somersault Attack: Disabled";
-				if (mp.psuedoScrewActive)
+				if (mp.pseudoScrewActive)
 				{
 					psText = "Charge Somersault Attack: Enabled";
 				}

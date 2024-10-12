@@ -1988,7 +1988,7 @@ namespace MetroidMod.Content.Items.Weapons
 					cl.DustType = dustType;
 					cl.DustColor = dustColor;
 					cl.LightColor = lightColor;
-					cl.canPsuedoScrew = mp.psuedoScrewActive;
+					cl.canPseudoScrew = mp.pseudoScrewActive;
 					cl.ShotSound = shotSound;
 					cl.ShotSoundMod = shotSoundMod;
 					cl.ChargeShotSound = chargeShotSound;

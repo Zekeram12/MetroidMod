@@ -42,7 +42,7 @@ namespace MetroidMod.Content.Projectiles
 				DustType = 64;
 		public Color DustColor = default(Color),
 				LightColor = MetroidMod.powColor;
-		public bool canPsuedoScrew = false;
+		public bool canPseudoScrew = false;
 		public bool missile = false;
 		public int comboSound = 0;
 		public bool noSomersault = false;
@@ -78,7 +78,7 @@ namespace MetroidMod.Content.Projectiles
 			if (mp.somersault)
 			{
 				P.alpha = 255;
-				if (canPsuedoScrew && mp.statCharge >= MPlayer.maxCharge)
+				if (canPseudoScrew && mp.statCharge >= MPlayer.maxCharge)
 				{
 					P.friendly = true;
 					P.damage = damage * 5 * ChargeShotAmt;
@@ -177,7 +177,7 @@ namespace MetroidMod.Content.Projectiles
 			if (mp.somersault)
 			{
 				P.alpha = 255;
-				if (canPsuedoScrew && mp.statCharge >= MPlayer.maxCharge)
+				if (canPseudoScrew && mp.statCharge >= MPlayer.maxCharge)
 				{
 					P.friendly = true;
 					P.damage = damage * 5 * ChargeShotAmt;

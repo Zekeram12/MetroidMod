@@ -849,12 +849,12 @@ namespace MetroidMod.Common.Players
 				Energy += Math.Min(heal, MaxEnergy -Energy);
 			}
 		}
-		public bool psuedoScrewActive = false;
+		public bool pseudoScrewActive = false;
 		public bool beamChangeActive = false;
 		public bool missileChangeActive = false;
 		public override void SaveData(TagCompound tag)
 		{
-			tag["psuedoScrewAttackActive"] = psuedoScrewActive;
+			tag["pseudoScrewAttackActive"] = pseudoScrewActive;
 			tag["senseMoveEnabled"] = senseMoveEnabled;
 			tag["energy"] = Energy;
 			tag["capacity"] = tankCapacity;
@@ -865,10 +865,10 @@ namespace MetroidMod.Common.Players
 		{
 			try
 			{
-				bool flag = tag.GetBool("psuedoScrewAttackActive");
+				bool flag = tag.GetBool("pseudoScrewAttackActive");
 				if (flag)
 				{
-					psuedoScrewActive = flag;
+					pseudoScrewActive = flag;
 				}
 
 				flag = tag.GetBool("senseMoveEnabled");

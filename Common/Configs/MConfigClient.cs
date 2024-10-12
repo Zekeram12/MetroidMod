@@ -81,8 +81,8 @@ namespace MetroidMod.Common.Configs
 		public DragablePanelPage BreastplateAddons = new();
 		//[Label("Reserves Menu")]
 		public DragablePanelPage Reserves = new();
-		//[Label("Charge Somersault (Psuedo Screw Attack)")]
-		public DragablePanelPage PsuedoScrewAttack = new();
+		//[Label("Charge Somersault (Pseudo Screw Attack)")]
+		public DragablePanelPage PseudoScrewAttack = new();
 
 		[SeparatePage]
 		public class DragablePanelPage

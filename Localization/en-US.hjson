@@ -3453,11 +3453,12 @@ Mods: {
 
 			TestBeamAddon: {
 				DisplayName: Test Beam
-				Tooltip: '''
-						 {$CommonItemTooltip.IsBeamAddon}Secondary
-						 You SHOULD have this, actually
-						 at least until I start guttin' shit
-						 '''
+				Tooltip:
+					'''
+					{$CommonItemTooltip.IsBeamAddon}Secondary
+					You SHOULD have this, actually
+					at least until I start guttin' shit
+					'''
 			}
 		}
 
@@ -4100,8 +4101,8 @@ Mods: {
 					Tooltip: ""
 				}
 
-				PsuedoScrewAttack: {
-					Label: Psuedo Screw Attack
+				PseudoScrewAttack: {
+					Label: Pseudo-Screw Attack
 					Tooltip: ""
 				}
 

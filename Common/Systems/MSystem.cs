@@ -69,6 +69,7 @@ namespace MetroidMod.Common.Systems
 		internal static ModKeybind BombKey;
 		internal static ModKeybind SwitchKey;
 		internal static ModKeybind HyperMode;
+		internal static ModKeybind ACSwitch;
 
 		public static bool PhazonSpawn;
 
@@ -81,6 +82,7 @@ namespace MetroidMod.Common.Systems
 			BombKey = KeybindLoader.RegisterKeybind(Mod, "Morph Ball Bomb", "C");
 			SwitchKey = KeybindLoader.RegisterKeybind(Mod, "Switch Interface", "G");
 			HyperMode = KeybindLoader.RegisterKeybind(Mod, "HyperMode", "C");
+			ACSwitch = KeybindLoader.RegisterKeybind(Mod, "Arm Cannon Mode Change", "J");
 		}
 		public override void Unload()
 		{

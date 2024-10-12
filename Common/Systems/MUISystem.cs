@@ -712,7 +712,7 @@ namespace MetroidMod.Common.Systems
 			MPlayer mp = P.GetModPlayer<MPlayer>();
 			Item item = P.inventory[P.selectedItem];
 			MGlobalItem mItem = item.GetGlobalItem<MGlobalItem>();
-			if (P.whoAmI == Main.myPlayer && P.active && !P.dead && !P.ghost)
+			if (P.whoAmI == Main.myPlayer && P.active && !P.dead && !P.ghost && mItem != null)
 			{
 				Texture2D texBar = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBar").Value,
 					texBarBorder = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBarBorder").Value,
@@ -786,7 +786,7 @@ namespace MetroidMod.Common.Systems
 						Color color = new Color((int)((byte)((float)Main.mouseTextColor)), (int)((byte)((float)Main.mouseTextColor)), (int)((byte)((float)Main.mouseTextColor)), (int)((byte)((float)Main.mouseTextColor)));
 						sb.DrawString(Terraria.GameContent.FontAssets.MouseText.Value, text, new Vector2(x + 38 - (vect.X / 2), y), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 					}
-					if (item.type == ModContent.ItemType<PowerBeam>() || item.type == ModContent.ItemType<ArmCannon>() && item.TryGetGlobalItem(out MGlobalItem gz) && gz.isBeam)
+					if (item.type == ModContent.ItemType<PowerBeam2>() || item.type == ModContent.ItemType<ArmCannon>() && item.TryGetGlobalItem(out MGlobalItem gz) && gz.isBeam)
 					{
 						MGlobalItem mi = item.GetGlobalItem<MGlobalItem>();
 						int num = Math.Min((int)mi.statUA, mi.maxUA);
@@ -801,7 +801,7 @@ namespace MetroidMod.Common.Systems
 						sb.DrawString(Terraria.GameContent.FontAssets.MouseText.Value, text, new Vector2(x + 38 - (vect.X / 2), y), color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 					}
 				}
-				if (item.type == ModContent.ItemType<PowerBeam>() || item.type == ModContent.ItemType<ArmCannon>() && item.TryGetGlobalItem(out MGlobalItem pb1) && pb1.isBeam || mp.shineDirection != 0 || mp.shineActive)
+				if (item.type == ModContent.ItemType<PowerBeam2>() || item.type == ModContent.ItemType<ArmCannon>() && item.TryGetGlobalItem(out MGlobalItem pb1) && pb1.isBeam || mp.shineDirection != 0 || mp.shineActive)
 				{
 					Texture2D overheatBar = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/OverheatBar").Value,
 					overheatBorder = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/OverheatBorder").Value;
