@@ -184,7 +184,7 @@ namespace MetroidMod.Common.UI
 		{
 			//TODO No failsafe. Should maybe be implemented?
 			// How do I get BeamChange[beamSlotType] to not always equal 0 so it isnt this disguting trainwreck? --Dr
-			// When I figure this out I'm gonna copypaste the above from the old thing and answer it        -Z
+			// Idk I just modularized the shit out of it and hoped for the best        -Z
 			if(Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem.Type == ModContent.ItemType<PowerBeam>())
 			{
 				PowerBeam powerBeamTarget = Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem as PowerBeam;

@@ -98,6 +98,7 @@ Mods: {
 			"Switch Interface.DisplayName": Switch  Interface
 			# I'm gonna assume there's a reason that these are all double-spaced and leave them like this     -Z
 			HyperMode.DisplayName: Hyper Mode
+			"Arm Cannon Mode Change.DisplayName": Arm  Cannon  Mode  Change
 		}
 
 		SuitAddonName: {

@@ -266,8 +266,11 @@ namespace MetroidMod.Content.Items.Weapons
 		public override void SetDefaults() //obviously stats are set here
 		{
 			MGlobalItem ac = Item.GetGlobalItem<MGlobalItem>();
-			VisualDinners = new int[2]; //it's a surprise tool that'll help us later
-			VisualDinners = [-1, -1];
+			if (VisualDinners == null)
+			{
+				VisualDinners = new int[2]; //it's a surprise tool that'll help us later
+				VisualDinners = [-1, -1];
+			}
 			Item.width = 40;
 			Item.height = 20;
 			Item.DamageType = ModContent.GetInstance<HunterDamageClass>();
@@ -314,12 +317,25 @@ namespace MetroidMod.Content.Items.Weapons
 			MPlayer mp = player.GetModPlayer<MPlayer>();
 			return (player.whoAmI == Main.myPlayer && mp.statOverheat < mp.maxOverheat);
 		}
+		#region Item visual methods
+		private void SetTexture(MGlobalItem ac)
+		{
+			if (!ac.isBeam)
+			{
+				ac.itemTexture = ModContent.Request<Texture2D>(Texture + "Missile").Value;
+			}
+			else { ac.itemTexture = ac.itemTexture = ModContent.Request<Texture2D>(Texture).Value; }
+		}
 
 		public override bool PreDrawInWorld(SpriteBatch sb, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
 		{
-			if (Item == null || !Item.TryGetGlobalItem(out MGlobalItem mi)) { return true; }
+			if (Item == null || !Item.TryGetGlobalItem(out MGlobalItem ac)) { return true; }
 			Texture2D tex = Terraria.GameContent.TextureAssets.Item[Type].Value;
-				tex = mi.itemTexture;
+			SetTexture(ac);
+			if (ac.itemTexture != null)
+			{
+				tex = ac.itemTexture;
+			}
 			float num5 = Item.height - tex.Height;
 			float num6 = Item.width / 2 - tex.Width / 2;
 			sb.Draw(tex, new Vector2(Item.position.X - Main.screenPosition.X + (tex.Width / 2) + num6, Item.position.Y - Main.screenPosition.Y + (tex.Height / 2) + num5 + 2f),
@@ -327,7 +343,22 @@ namespace MetroidMod.Content.Items.Weapons
 			return false;
 		}
 
+		public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
+		{
+			if (Item == null || !Item.TryGetGlobalItem(out MGlobalItem ac)) { return true; }
+			Texture2D tex = Terraria.GameContent.TextureAssets.Item[Type].Value;
+			SetTexture(ac);
+			if (ac.itemTexture != null)
+			{
+				tex = ac.itemTexture;
+			}
+			spriteBatch.Draw(tex, new Vector2(position.X + 2f, position.Y), new Rectangle?(new Rectangle(0, 0, tex.Width, tex.Height)), drawColor, 0f, origin, scale + 0.2f, SpriteEffects.None, 0f);
+			return false;
+		}
+		#endregion
+
 		//"This is where the fun begins" -Anakin Skywalker
+		#region The juicy stuff
 		public override void UpdateInventory(Player p)
 		{
 			MPlayer mp = p.GetModPlayer<MPlayer>(); //finds the current player's MPlayer data for later modification
@@ -376,7 +407,7 @@ namespace MetroidMod.Content.Items.Weapons
 			{
 				beamSound = Sounds.Items.Weapons.PowerBeamSound;
 			}
-			if (missileAddons != null && missileAddons[MissileAddonSlotID.Primary] != null)
+			if (missileAddons != null && !missileAddons[MissileAddonSlotID.Primary].IsAir)
 			{
 				missileSound = new SoundStyle(MissileAddonLoader.GetAddon(missileAddons[MissileAddonSlotID.Primary]).ShotSound);
 			}
@@ -399,8 +430,7 @@ namespace MetroidMod.Content.Items.Weapons
 			}
 		}
 
-
-
+		
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
@@ -434,7 +464,18 @@ namespace MetroidMod.Content.Items.Weapons
 
 			return false;
 		}
+		#endregion
+		public override void AddRecipes()
+		{
+			CreateRecipe(1)
+				.AddIngredient<Miscellaneous.ChoziteBar>(8)
+				.AddIngredient<Tiles.MissileExpansion>(1)
+				.AddIngredient<Miscellaneous.EnergyShard>(3)
+				.AddTile(TileID.Anvils)
+				.Register();
+		}
 
+		#region Data Preservation
 		public override ModItem Clone(Item newEntity)
 		{
 			//Make sure the clone has all the same addons as the original
@@ -524,16 +565,6 @@ namespace MetroidMod.Content.Items.Weapons
 			} //charge combo quick swap
 		}
 
-		public override void AddRecipes()
-		{
-			CreateRecipe(1)
-				.AddIngredient<Miscellaneous.ChoziteBar>(8)
-				.AddIngredient<Tiles.MissileExpansion>(1)
-				.AddIngredient<Miscellaneous.EnergyShard>(3)
-				.AddTile(TileID.Anvils)
-				.Register();
-		}
-
 
 		public override void SaveData(TagCompound tag)
 		{
@@ -579,6 +610,12 @@ namespace MetroidMod.Content.Items.Weapons
 				}
 				tag.Add("Charge Combo Quick-Swap - Slot " + (i + 1), ItemIO.Save(comboQuickChange[i]));
 			}
+
+			//priority winners
+			for (int i = 0; i < 2; ++i)
+			{
+				tag.Add("Beam Visual Settings - Data Point " + (i + 1), VisualDinners[i]);
+			}
 			#endregion
 			//ammo
 			if (Item.TryGetGlobalItem(out MGlobalItem ac))
@@ -594,6 +631,7 @@ namespace MetroidMod.Content.Items.Weapons
 		{
 			try
 			{
+				#region addons
 				beamAddons = new Item[BeamAddonSlotID.Count];
 				for (int i = 0; i < beamAddons.Length; i++)
 				{
@@ -619,6 +657,11 @@ namespace MetroidMod.Content.Items.Weapons
 					comboQuickChange[i] = item;
 				}
 
+				for (int i = 0; i < 2; i++)
+				{
+					VisualDinners[i] = tag.Get<int>("Beam Visual Settings - Data Point " + (i + 1));
+				}
+				#endregion
 				MGlobalItem ac = Item.GetGlobalItem<MGlobalItem>();
 				ac.maxUA = tag.GetInt("Maximum UA");
 				ac.statUA = tag.GetFloat("Current UA");
@@ -627,5 +670,6 @@ namespace MetroidMod.Content.Items.Weapons
 			}
 			catch { }
 		}
+		#endregion
 	}
 }

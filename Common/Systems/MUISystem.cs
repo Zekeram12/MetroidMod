@@ -711,7 +711,7 @@ namespace MetroidMod.Common.Systems
 			Player P = Main.player[Main.myPlayer];
 			MPlayer mp = P.GetModPlayer<MPlayer>();
 			Item item = P.inventory[P.selectedItem];
-			MGlobalItem mItem = item.GetGlobalItem<MGlobalItem>();
+			item.TryGetGlobalItem<MGlobalItem>(out MGlobalItem mItem);
 			if (P.whoAmI == Main.myPlayer && P.active && !P.dead && !P.ghost && mItem != null)
 			{
 				Texture2D texBar = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/ChargeBar").Value,
