@@ -1,72 +1,159 @@
-﻿TODOs - ZEKERAM BEAM OVERHAUL EDITION:
-(in a vague, mostly vibe-based order)
+﻿
+
+ .----------------.  .----------------.  .----------------.  .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. |
+| |  _________   | || |     ____     | || |  ________    | || |     ____     | |
+| | |  _   _  |  | || |   .'    `.   | || | |_   ___ `.  | || |   .'    `.   | |
+| | |_/ | | \_|  | || |  /  .--.  \  | || |   | |   `. \ | || |  /  .--.  \  | |
+| |     | |      | || |  | |    | |  | || |   | |    | | | || |  | |    | |  | |
+| |    _| |_     | || |  \  `--'  /  | || |  _| |___.' / | || |  \  `--'  /  | |
+| |   |_____|    | || |   `.____.'   | || | |________.'  | || |   `.____.'   | |
+| |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------' 
+			_____________________________
+                        ZEKERAM BEAM OVERHAUL EDITION
+		        ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅ ̅
+
+		    (in a vague, mostly vibe-based order)
 
 
-||=================================||
-||CATEGORY A: ADVANCED BEAMSTACKING||
-||=================================||
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+||=====================================||
+||< CATEGORY A: ADVANCED BEAMSTACKING >||
+||=====================================||
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -Make Charge Beam function
+	-This entails:
+		* Charge shots
+		* The charge lead
+		* Alternate ways to fire the arm cannon ("CustomFires")
+		* the Primary quick-swap
+		* array passives (boosts that still apply while in the array)
+		* Multiple CustomFires at once?
+		* [eventually] Charge Combos
+
+-Make Wave Beam
+	-This entails:
+		* Projectile behavior injection
+		* Multiple beam shots in one firing (charge shot increases projectile count to 2 if it wasn't at or past it already)
+		* Special behavior on charge shots
+		* Tile interaction (similar principles can be applied to entity interaction)
+
+-Make Hyper Beam
+	-Why now? Because it entails:
+		* VIB addon behavior
+		* Item VFX
+		* Advanced beam graphical effects
+		* Suitlocking
 
 -Implement primary array
 	-Add array UI to the UI
 	-Implement radial menu
+		-Concept: Pressing the interface button opens a wheel around the player containing the currently-selected mode's quick-swap array.
+			Not used to add or remove beams from the array, simply to swap what's equipped
 
 -Beam special textures (fusion DNA beam)
 	-Method in the beamshot, check shapewinner's specialtexture method against the rest of the array
 	-method returns the new shot and charge shot textures and sounds
 
 -Beam texture animation
+	-Variable for counting the texture's frames already exists but does not currently get used
 
 -Arm cannon beam lights
+	-Classic design: Simple glowmask colored to match the current ColorPriority. Think MercurySteam arm cannons.
+	-Prime design: Arm Cannon's shape is decided by ShapePriority, with the color of the exposed lighty-bits determined by ColorPriority. (e.g. plasma's extra length w/ Ice blue)
 
 -Make sure system is multiplayer compatible
 
 -Localization Antics
-	-Give beam addons cool tooltips
+	-Give beam addons fancy tooltips
 	-Make beam shot's localization name change to match addons equipped
+		-Override DisplayName with the ShapePriority?
+			-Append first word of ColorPriority to the beginning? (e.g. Wave Spazer Beam, Ice Plasma Beam)
 
 -Make better UI
+	-Current UI is 99% placeholder, but the AddonSlot system in ArmCannonUI is pretty much complete.
+	-Would like to keep all of the slot menus in the same UI file if possible (save the radials obviously)
 
 -Make example beam addon in the example submod
+	-Move Test Beam there after everything else is good to go?
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
 
-||==========================||
-||CATEGORY B: MISSILE SYSTEM||
-||==========================||
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+||==============================||
+||< CATEGORY B: MISSILE SYSTEM >||
+||==============================||
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -Decide whether or not missile addons should have their own dedicated projectiles
+	-Points in favor of having dedicated projectiles:
+		* Able to copy 80% of charge combo code verbatim
+		* Only one missile slot actually changes the properties of the standard shot
+		* More intuitive, in the sense that missiles are a lot more physical than beams
+	-Points against having dedicated projectiles:
+		* Makes it much more difficult to create a missile addon
+		* Creates a dissonance between weapon addon systems
+		* The third point in favor of dedicated projectiles is total conjecture
 
 -Determine how to port charge combos
 	-See if making beam-related ones require that beam equipped breaks balancing or not
 
 -Make a config to change starting missiles to 0 and let missile expansions stack 1 higher
+	-Useful for mapmaking
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
 
-||===================================||
-||CATEGORY C: UPGRADES TO OLD SYSTEMS||
-||===================================||
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+||=======================================||
+||< CATEGORY C: UPGRADES TO OLD SYSTEMS >||
+||=======================================||
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -Figure out shaders for better beam coloring
+	-Texture coloring functions, but looks like ass.
+	-Could possibly use armor shaders? (Critter Shampoo applies armor dye to projectiles (minions, namely (yeah apparently they're projectiles, I didn't realize either)))
 
 -Add automatic texture-grabbing for suit addons
+	-Very easy to implement, but tedious; requires renaming all suitaddon assets to match format
+
+-Upgrade DustyDeath to be more like the copy inside of BeamShot
+	-I ended up making the dusty death in the beamshot more complicated as a natural part of development and it only makes sense to bring MProjectile up to the same standard
 
 -Figure out how to fix the thing where gravity uses neptune's shell physics underwater and not normal physics
-
--
-
+	-Honestly this one is kind of a tangent. I saw it mentioned in an old conversation while looking for something or other.
 
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-||=================||
-||CATEGORY D: FIXES||
-||=================||
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+||=====================||
+||< CATEGORY D: FIXES >||
+||=====================||
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -Re-add old beam/missile VFX that died in the port
+	- Dust trails on beams, death dust particles might be too small
+	- Ice Beam's roation effect while it has shapepriority
+
+-Add failsafes for missing beam addon assets
+	-VERY IMPORTANT. Especially since I doubt everyone wants a custom impact SE on their beam, but I also don't want to take away from the automaticness
 
 -Fix all the systems I broke
 	-Worldgen
@@ -76,4 +163,15 @@
 	-Parts of suit energy apparently
 	-Hatches probably
 
--Add failsafes for missing beam addon assets
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+||=============================||
+||< CATEGORY E: FUTURE PLANS? >||
+||=============================||
+
+
+
+
