@@ -1,54 +1,79 @@
-﻿TODOs:
-(not in any particular order)
+﻿TODOs - ZEKERAM BEAM OVERHAUL EDITION:
+(in a vague, mostly vibe-based order)
 
- -	Get new textures for:
-	 -	Stardust Hazard Shield Suit
-	 -	MPH arm cannons
- -	Figure out and implement screen shaders for:
-	 -	X-Ray Visor (implement in Metroid Prime update, make upgrade in Metroid Prime 3: Corruption update)
-	 -	Thermal Visor (implement in Metroid Prime update)
-	 -	Dark Visor (implement in Metroid Prime 2: Echoes update)
-	 -	Echo Visor (implement in Metroid Prime 2: Echoes update)
-	 -	Command Visor (implement in Metroid Prime 3: Corruption update)
- -	Fix Kraid multiplayer loot bag
- -	Make Scan Visor lock onto enemies
- -	Find a better way to alert players to the new location of the suit ui, because apparently telling them through the suit's set bonus tooltip isn't good enough.
- -	Sprites for things relating to the Chozo Ruins 'biome' (for use in the Bestiary)
- -	Make a new Mod Menu that isn't explicitly based on NEStroid to fit the new music
-	 -	For reference purposes, the new music is stated to be vaguely based on Super Metroid
- -	Balance the new addon system (somehow)
- -	Figure out how to make Hazard Shield shoulderpads draw on primary suits
- -	Make Space Jump Boots conform to the new jump loader
-- Netsync the following:
-	imperialist invisibiltiy
-	powerbeam shotsound
-	powerbeam and missile launcher appearance
-	SHOCKCOIL
-add right click parry for arm cannon
 
-BOSS OVERHAUL:
--Current behavior is for classic difficulty
--More item drops, generally more aggressive/agile with difficulty, unique FTW mechanics
-Torizo:
--spews bombs less often, more of them, faster, less items dropped
--make him jump around more often, possibly "juke" the player when above him
-	FTW: destroys platforms and ropes, headless phase unavoidable?
-Serris:
--less vuln time, x phase spews x parasites that slow, make core face player
--enrages out of ocean
-	FTW: must be fought underwater
-Pantoon:
-gradually enrages from being hit with missiles, moves faster, more fireballs but make them slower?
-	FTW:???
-Nightmare:
-X phase spews gravity-warping x parasites
-	FTW: must be fought in space?
-OP:
--super high defense when shield is up
--spawns pirates when regenerating
--enrages when player is above for too long?
-	FTW:also spawns weavel
-Goldie:
--missiles are useless
--supers reflect back at player
-	FTW: can space jump after the player
+||=================================||
+||CATEGORY A: ADVANCED BEAMSTACKING||
+||=================================||
+
+-Make Charge Beam function
+
+-Implement primary array
+	-Add array UI to the UI
+	-Implement radial menu
+
+-Beam special textures (fusion DNA beam)
+	-Method in the beamshot, check shapewinner's specialtexture method against the rest of the array
+	-method returns the new shot and charge shot textures and sounds
+
+-Beam texture animation
+
+-Arm cannon beam lights
+
+-Make sure system is multiplayer compatible
+
+-Localization Antics
+	-Give beam addons cool tooltips
+	-Make beam shot's localization name change to match addons equipped
+
+-Make better UI
+
+-Make example beam addon in the example submod
+
+
+
+
+||==========================||
+||CATEGORY B: MISSILE SYSTEM||
+||==========================||
+
+-Decide whether or not missile addons should have their own dedicated projectiles
+
+-Determine how to port charge combos
+	-See if making beam-related ones require that beam equipped breaks balancing or not
+
+-Make a config to change starting missiles to 0 and let missile expansions stack 1 higher
+
+
+
+
+||===================================||
+||CATEGORY C: UPGRADES TO OLD SYSTEMS||
+||===================================||
+
+-Figure out shaders for better beam coloring
+
+-Add automatic texture-grabbing for suit addons
+
+-Figure out how to fix the thing where gravity uses neptune's shell physics underwater and not normal physics
+
+-
+
+
+
+
+||=================||
+||CATEGORY D: FIXES||
+||=================||
+
+-Re-add old beam/missile VFX that died in the port
+
+-Fix all the systems I broke
+	-Worldgen
+		-Chozo Statues/OORBs
+		-Missile/E-tank placements
+	-Fake blocks
+	-Parts of suit energy apparently
+	-Hatches probably
+
+-Add failsafes for missing beam addon assets

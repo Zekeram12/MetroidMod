@@ -23,6 +23,7 @@ namespace MetroidMod.Content.BeamAddons
 		public override string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/Impact"; //This is the filepath for a custom beam sound if you don't like the default
 
 		public override Color ShotColor => new(0, 0, 255, 1f);
+		public override int ShotDust => 33;
 
 		public override void SetStaticDefaults()
 		{

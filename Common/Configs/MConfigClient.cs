@@ -19,11 +19,6 @@ namespace MetroidMod.Common.Configs
 
 		[Header("General")]
 
-		/*[Label("Toggle alternate weapon textures")]
-		[Tooltip("When enabled, shows Metroid Prime style weapons, as opposed to the default Super Metroid style.\n" +
-		"Default value: false")]*/
-		public bool UseAltWeaponTextures;
-
 		/*[Label("[i:MetroidMod/EnergyTankAddon] Energy Hit Sound")]
 		[Tooltip("When enabled, a custom sound will play when Suit Energy receives damage.\n" +
 		"Default value: true")]*/
@@ -51,24 +46,14 @@ namespace MetroidMod.Common.Configs
 		public bool energyLowFade;
 		
 		[BackgroundColor(255, 255, 255)]
-		[Label("[i:StoneBlock] Weapon Fire Screenshake")]
-		[Tooltip("Should beams and missiles produce screenshake when fired?")]
 		[DefaultValue(true)]
 		public bool WeaponFireScreenshake;
 		
 		[BackgroundColor(255, 255, 255)]
-		[Label("[i:StoneBlock] Weapon Collide Screenshake")]
-		[Tooltip("Should beams, bombs and missiles produce screenshake when exploding?")]
 		[DefaultValue(true)]
 		public bool WeaponCollideScreenshake;
 		
 		[Header("DraggableUIPanels")]
-		//[Label("Power Beam")]
-		public DragablePanelPage PowerBeam = new();
-		//[Label("Power Beam Error")]
-		public DragablePanelPage PowerBeamError = new();
-		//[Label("Missile Launcher")]
-		public DragablePanelPage MissileLauncher = new();
 		//[Label("Morph Ball")]
 		public DragablePanelPage MorphBall = new();
 		//[Label("Sense Move")]
@@ -138,11 +123,6 @@ namespace MetroidMod.Common.Configs
 		"Default value: true")]*/
 		[DefaultValue(true)]
 		public bool showTorizoRoomIcon;
-
-		public override void OnChanged()
-		{
-			MetroidMod.UseAltWeaponTextures = UseAltWeaponTextures;
-		}
 	}
 
 	//[Label("Client Side Debug")]

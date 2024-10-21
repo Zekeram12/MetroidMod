@@ -8,19 +8,10 @@ using MetroidMod.Common.Players;
 using MetroidMod.Content.Hatches;
 using MetroidMod.Content.Hatches.Variants;
 using MetroidMod.Content.Items.Accessories;
-using MetroidMod.Content.Items.Addons;
-using MetroidMod.Content.Items.Addons.Hunters;
-using MetroidMod.Content.Items.Addons.V2;
-using MetroidMod.Content.Items.Addons.V3;
-using MetroidMod.Content.Items.MissileAddons;
-using MetroidMod.Content.Items.MissileAddons.BeamCombos;
 using MetroidMod.Content.NPCs.Torizo;
 using MetroidMod.Content.SuitAddons;
 using MetroidMod.Content.Tiles;
 using MetroidMod.Content.Tiles.ItemTile;
-using MetroidMod.Content.Tiles.ItemTile.Beam;
-using MetroidMod.Content.Tiles.ItemTile.Beam.Hunters;
-using MetroidMod.Content.Tiles.ItemTile.Missile;
 using MetroidMod.Content.Walls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -587,11 +578,11 @@ namespace MetroidMod.Common.Systems
 						int num3 = 0;
 						while (!flag)
 						{
-							if (AddExpansion(WorldGen.genRand.Next(1, Main.maxTilesX), WorldGen.genRand.Next((int)GenVars.rockLayer, Main.maxTilesY - 100)))
+							/*if (AddExpansion(WorldGen.genRand.Next(1, Main.maxTilesX), WorldGen.genRand.Next((int)GenVars.rockLayer, Main.maxTilesY - 100)))
 							{
 								flag = true;
-							}
-							else
+							}*/
+							//else
 							{
 								num3++;
 								if (num3 >= 20500) //16400
@@ -626,18 +617,22 @@ namespace MetroidMod.Common.Systems
 			{
 				if (addon.CanGenerateOnChozoStatue()) { list[index++] = new WeightedChance(() => { item = addon.TileType; }, addon.GenerationChance()); }
 			}
+			/*foreach (ModBeamAddon addon in SuitAddonLoader.addons)
+			{
+				if (addon.CanGenerateOnChozoStatue()) { list[index++] = new WeightedChance(() => { item = addon.TileType; }, addon.GenerationChance()); }
+			}*/
 			/*list[index++] = new WeightedChance(() => { item = ModContent.TileType<ShockCoilTile>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<MagMaulTile>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<BattleHammerTile>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<VoltDriverTile>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<ImperialistTile>(); }, 6);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<JudicatorTile>(); }, 6);*/
+			list[index++] = new WeightedChance(() => { item = ModContent.TileType<JudicatorTile>(); }, 6);
 			//list[index++] = new WeightedChance(() => { item = (ushort)ModContent.TileType<Content.Tiles.ItemTile.MorphBallTile>(); }, RarityLoader.RarityCount - 4);
 			//list[index++] = new WeightedChance(() => { item = (ushort)ModContent.TileType<Content.Tiles.ItemTile.XRayScopeTile>(); }, RarityLoader.RarityCount - 4);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<ChargeBeamTile>(); }, 8);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<HiJumpBootsTile>(); }, 8);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<WaveBeamTile>(); }, 8);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<HomingMissile>(); }, 4);
+			//list[index++] = new WeightedChance(() => { item = ModContent.TileType<HomingMissile>(); }, 4);
 			list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpaceJumpBootsTile>(); }, 4);
 			if(Main.LocalPlayer.ZoneUnderworldHeight)
 			{
@@ -645,57 +640,57 @@ namespace MetroidMod.Common.Systems
 			}
 			if (NPC.downedQueenBee || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerTile>(); }, 8);
+				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerBeamTile>(); }, 8);
 			}
 			if (NPC.downedBoss3 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceBeamTile>(); }, 8);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerCombo>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceMissile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerCombo>(); }, 4);
 			}
 			if (NPC.downedMechBoss2 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<ChargeBeamV2Tile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<DiffusionTile>(); }, 4);
 			}
 			if (NPC.downedMechBoss1 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<WaveBeamV2Tile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<Flamethrower>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaMachinegun>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<WaveBeamV2Tile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<Flamethrower>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaMachinegun>(); }, 4);
 			}
 			if (NPC.downedMechBoss3 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<WideBeamTile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<WideBeamTile>(); }, 4);
 			}
 			if (bossesDown.HasFlag(MetroidBossDown.downedKraid) || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaBeamGreenTile>(); }, 4);
+				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaBeamTile>(); }, 4);
 			}
 			if (Main.hardMode || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SuperMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceSpreader>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SeekerMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<Wavebuster>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<SuperMissile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceSpreader>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<SeekerMissile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<Wavebuster>(); }, 4);
 			}
 			if (NPC.downedPlantBoss || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NovaCombo>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<NovaCombo>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NovaBeamTile>(); }, 4);
 			}
 			if (NPC.downedMoonlord || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
 			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SolarCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaMissile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustCombo>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustMissile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<SolarCombo>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaCombo>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaMissile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SolarBeamTile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustBeamTile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<VortexBeamTile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<LuminiteBeamTile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<OmegaCannonTile>(); }, 4);
+				//list[index++] = new WeightedChance(() => { item = ModContent.TileType<OmegaCannonTile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PhazonBeamTile>(); }, 4);
 			}
 			if (NPC.downedMechBossAny || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
@@ -707,7 +702,7 @@ namespace MetroidMod.Common.Systems
 			{
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceBeamV2Tile>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceSuperMissile>(); }, 4);
-			}
+			}*/
 			Array.Resize(ref list, index);
 			double numericValue = WorldGen.genRand.Next(0, (int)list.Sum(p => p.Ratio));
 
@@ -740,7 +735,7 @@ namespace MetroidMod.Common.Systems
 			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<BattleHammerItem>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<VoltDriverItem>(); }, 6);
 			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<ImperialistItem>(); }, 6);
-			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<JudicatorItem>(); }, 6);*/
+			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<JudicatorItem>(); }, 6);
 			//list[index++] = new WeightedChance(() => { item = (ushort)ModContent.ItemType<Content.Items.ItemItem.MorphBallItem>(); }, RarityLoader.RarityCount - 4);
 			//list[index++] = new WeightedChance(() => { item = (ushort)ModContent.ItemType<Content.Items.ItemItem.XRayScopeItem>(); }, RarityLoader.RarityCount - 4);
 			list[index++] = new WeightedChance(() => { item = ModContent.ItemType<ChargeBeamAddon>(); }, 8);
@@ -813,7 +808,7 @@ namespace MetroidMod.Common.Systems
 			{
 				list[index++] = new WeightedChance(() => { item = ModContent.ItemType<IceBeamV2Addon>(); }, 4);
 				list[index++] = new WeightedChance(() => { item = ModContent.ItemType<IceSuperMissileAddon>(); }, 4);
-			}
+			}*/
 			Array.Resize(ref list, index);
 			double numericValue = WorldGen.genRand.Next(0, (int)list.Sum(p => p.Ratio));
 
@@ -1109,7 +1104,7 @@ namespace MetroidMod.Common.Systems
 			}
 			return false;
 		}
-		public static bool AddExpansion(int i, int j)
+		/*public static bool AddExpansion(int i, int j)
 		{
 			//Mod mod = MetroidMod.Instance;
 			int k = j;
@@ -1137,7 +1132,7 @@ namespace MetroidMod.Common.Systems
 					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<VoltDriverTile>(); }, 1);
 					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<ShockCoilTile>(); }, 1);
 					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<UAExpansionTile>(); }, 12);
-					/*switch (Main.rand.Next(14))
+					switch (Main.rand.Next(14))
 					{
 						case 0: 
 						case 1:
@@ -1153,7 +1148,7 @@ namespace MetroidMod.Common.Systems
 						case 11: output = (ushort)ModContent.TileType<ShockCoilTile>(); break;
 						case 12:
 						case 13: output = (ushort)ModContent.TileType<UAExpansionTile>(); break;
-					}*/
+					}
 					Array.Resize(ref list, index);
 					double numericValue = WorldGen.genRand.Next(0, (int)list.Sum(p => p.Ratio));
 
@@ -1178,7 +1173,7 @@ namespace MetroidMod.Common.Systems
 				}
 			}
 			return false;
-		}
+		}*/
 
 
 		private void ChozoRuins(GenerationProgress progress, GameConfiguration configuration)
@@ -1534,7 +1529,7 @@ namespace MetroidMod.Common.Systems
 			Main.tile[x + width / 2, y + 4].Get<TileWallWireStateData>().Slope = SlopeType.Solid;
 			Main.tile[x + width / 2, y + 4].Get<TileWallWireStateData>().IsHalfBlock = false;
 			Main.tile[x + width / 2, y + 4].Get<TileWallWireStateData>().HasTile = true;
-			Main.tile[x + width / 2, y + 4].Get<TileTypeData>().Type = (ushort)ModContent.TileType<MissileExpansionTile>();
+			//Main.tile[x + width / 2, y + 4].Get<TileTypeData>().Type = (ushort)ModContent.TileType<MissileExpansionTile>();
 			Main.tile[x + width / 2, y + 4].Get<TileWallWireStateData>().TileFrameX = 0;
 			Main.tile[x + width / 2, y + 4].Get<TileWallWireStateData>().TileFrameY = 0;
 

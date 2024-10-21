@@ -136,7 +136,7 @@ namespace MetroidMod.Common.Players
 			}
 			for (int i = 0; i < Player.inventory.Length; i++)
 			{
-				if (Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>() || Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>())
+				/*if (Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.MissileLauncher>() || Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.PowerBeam>() || Player.inventory[i].type == ModContent.ItemType<Content.Items.Weapons.ArmCannon>())
 				{
 					MGlobalItem mi = Player.inventory[i].GetGlobalItem<MGlobalItem>();
 
@@ -152,7 +152,7 @@ namespace MetroidMod.Common.Players
 							mi.statUA += mi.maxUA;
 						}
 					}
-				}
+				}*/
 			}
 		}
 		private int Stinger = 0;

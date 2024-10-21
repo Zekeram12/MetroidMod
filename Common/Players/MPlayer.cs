@@ -460,7 +460,7 @@ namespace MetroidMod.Common.Players
 			{
 				if (MSystem.HyperMode.Current && statPBCh <= 0f && statCharge <= 0f && canHyper)
 				{
-					if (!PrimeHunter && (Player.HeldItem.type == ModContent.ItemType<PowerBeam>() || Player.HeldItem.type == ModContent.ItemType<MissileLauncher>() || Player.HeldItem.type == ModContent.ItemType<ArmCannon>()) && (Player.armor[0].type == ModContent.ItemType<PowerSuitHelmet>() && Player.armor[1].type == ModContent.ItemType<PowerSuitBreastplate>()) && Player.armor[2].type == ModContent.ItemType<PowerSuitGreaves>())
+					if (!PrimeHunter && (Player.HeldItem.type == ModContent.ItemType<ArmCannon>()) && (Player.armor[0].type == ModContent.ItemType<PowerSuitHelmet>() && Player.armor[1].type == ModContent.ItemType<PowerSuitBreastplate>()) && Player.armor[2].type == ModContent.ItemType<PowerSuitGreaves>())
 					{
 						if (!soundPlayed)
 						{
@@ -679,7 +679,7 @@ namespace MetroidMod.Common.Players
 			if (grapplingBeam >= 0)
 			{
 				Projectile projectile = Main.projectile[grapplingBeam];
-				if ((projectile.type == ModContent.ProjectileType<Content.Projectiles.GrappleBeamShot>() || projectile.type == ModContent.ProjectileType<Content.Projectiles.GrappleBeamPlusShot>()) && projectile.owner == Player.whoAmI && projectile.active)
+				if ((projectile.type == ModContent.ProjectileType<Content.Projectiles.GrappleBeamShot>() || projectile.type == ModContent.ProjectileType<Content.Projectiles.GrappleBeamLiteShot>()) && projectile.owner == Player.whoAmI && projectile.active)
 				{
 					float targetrotation = (float)Math.Atan2(((projectile.Center.Y - Player.Center.Y) * Player.direction), ((projectile.Center.X - Player.Center.X) * Player.direction));
 					grappleRotation = targetrotation;

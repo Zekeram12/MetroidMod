@@ -12,27 +12,8 @@ namespace MetroidMod.Common.GlobalItems
 	{
 		public AddonType AddonType = AddonType.None;
 
-		#region Old code, remove later when power beam 2 is done
-		public int addonSlotType = -1;
-		public int beamSlotType = -1;
-		public int missileChangeType = -1;
-		public float addonChargeDmg = 1f;
-		public float addonChargeHeat = 1f;
-		public float addonDmg = 0f;
-		public float addonSpeed = 0f;
-		public float addonHeat = 0f;
-		/// <summary>
-		/// How much universal ammo to use per normal shot (NOT A PERCENTAGE)
-		/// </summary>
-		public float addonUACost = 0f;
 
-		public int missileSlotType = -1;
-
-		public int addonMissileCost = 5;
-		public int addonMissileDrain = 5;
-		#endregion
-
-		// float because funi - ChaosInsurgent49
+		
 		/// <summary>
 		/// If <b>true</b>, display the Charge Bar.
 		/// <br/><br/>Defaults to <b>false</b>.

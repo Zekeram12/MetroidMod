@@ -6,6 +6,7 @@ using Terraria;
 using MetroidMod.ID;
 using MetroidMod.Default;
 using Terraria.Audio;
+using Terraria.ID;
 
 //gonna document as much of the code as I can to make it easy to follow
 namespace MetroidMod
@@ -89,11 +90,16 @@ namespace MetroidMod
 		/// <summary>
 		/// The filepath for the addon's shot/charged shot impact sound effect.
 		/// </summary>
-		public virtual string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamImpactSound";
+		public virtual string ImpactSound => $"{Mod.Name}/Assets/Sounds/BeamAddons/{Name}/Impact";
 		/// <summary>
 		/// The color of the addon's projectile.
 		/// </summary>
 		public abstract Color ShotColor { get; }
+		/// <summary>
+		/// The integer ID of the dust particles this addon's projectile will leave behind.
+		/// <br/>Use <see cref="DustID"/> for vanilla dust and use <see cref="ModDust.Type"/> for modded ones.
+		/// </summary>
+		public abstract int ShotDust { get; }
 		#endregion
 
 		#region Visual Priority System variables
@@ -105,6 +111,7 @@ namespace MetroidMod
 		/// Slot shape priority highest to lowest: Secondary(4), Spread(3), Ion(2), Ability(1), Primary(0)
 		/// </summary>
 		public abstract int ShapePriority { get; }
+
 		/// <summary>
 		/// Determines the level of priority of the addon's <b>shot color</b>.<br />
 		/// 0 is the lowest, 5 is the highest<br />
@@ -114,8 +121,13 @@ namespace MetroidMod
 		/// </summary>
 		public abstract int ColorPriority { get; }
 		/// <summary>
-		/// If true, addon's visuals <b>completely override the priority system.</b><br/>
-		/// Intended for use on Special Beams, like Hyper and Phazon<br/>
+		/// If true, this addon's sounds will be applied to the shot so long as it has color priority.
+		/// </summary>
+		public virtual bool SoundOverride { get; } = false;
+
+		/// <summary>
+		/// If true, addon's visuals <b>completely override the priority system.</b>
+		/// Intended for use on Special Beams, like Hyper and Phazon.<br/>
 		/// Checks each addon in sequential order; 1, 2, yadda yadda.<br/>
 		/// Defaults to <b>false.</b><br/>
 		/// <i>(stands for Very Important Beam)</i>
@@ -129,6 +141,8 @@ namespace MetroidMod
 		/// See <see cref="BeamAddonSlotID"/> for details on the different slots.
 		/// </summary> 
 		public virtual int AddonSlot { get; set; } = BeamAddonSlotID.None;
+
+		//These stats are plugged into the WEAPON, not the projectile.
 		/// <summary>
 		/// The base damage value this addon adds.<br/>
 		/// NOTE: Not to be confused with DamageMult, which is applied after this variable.
@@ -161,7 +175,7 @@ namespace MetroidMod
 		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
 		/// (i.e. if the addon should have a 50% speed increase, put 50f instead of 1.5f)
 		/// </summary>
-		public virtual float VelocityMult {  get; set; } = 0f;
+		public virtual float VelocityMult { get; set; } = 0f;
 		/// <summary>
 		/// The critical strike chance this addon adds.<br/>
 		/// NOTE: due to how crits work this one does NOT have a respective Mult value.
@@ -171,13 +185,44 @@ namespace MetroidMod
 		/// The base overheat value this addon adds.<br/>
 		/// NOTE: Not to be confused with OverheatMult, which is applied after this variable.
 		/// </summary>
-		public virtual int BaseOverheat { get; set;} = 0;
+		public virtual int BaseOverheat { get; set; } = 0;
 		/// <summary>
 		/// The overheat multiplier value this addon adds.<br/>
 		/// NOTE: Input the value as you would see it on the item's tooltip. It will be converted later.<br/>
 		/// (i.e. if the addon should have a -50% overheat multiplier, put -50f instead of 0.5f)
 		/// </summary>
 		public virtual float OverheatMult { get; set; } = 0f;
+		/// <summary>
+		/// The amount of extra projectiles this addon will make the player fire.
+		/// </summary>
+		public virtual int AddShots { get; set; } = 0;
+
+
+		//These stats get plugged into the PROJECTILE, not the weapon.
+		/// <summary>
+		/// The buff that this addon will inflict on hit.
+		/// </summary>
+		public virtual BuffID InflictsBuff { get; set; } = null;
+		/// <summary>
+		/// The amount of extra tiles this addon allows the beam to interact with before being destroyed.
+		/// <br/><br/>Example: The amount of tiles the Wave Beam allows the shot to phase through.
+		/// </summary>
+		public virtual int TileInteract { get; set; } = 0;
+		/// <summary>
+		/// The amount of extra NPCs this addon allows the beam to hit before being destroyed.
+		/// </summary>
+		public virtual int NPCInteract { get; set; } = 0;
+		/// <summary>
+		/// If true, this addon will continue to perform its actions for as long as Fire is held.
+		/// <br/>Only mess with this if you know what you're doing.
+		/// <br/><br/>Defaults to <b>false</b>.
+		/// </summary>
+		public virtual bool HoldFire { get; set; } = false;
+		/// <summary>
+		/// If true, you cannot use the Charge Beam while this addon is active, regardless of whether or not it's in the array.
+		/// <br/><br/>Defaults to <b>whatever value HoldFire is set to</b>.
+		/// </summary>
+		public virtual bool OverrideCharge => HoldFire;
 		#endregion
 
 
@@ -238,8 +283,26 @@ namespace MetroidMod
 
 		/// <inheritdoc cref="ModItem.SetDefaults()"/>
 		public virtual void SetItemDefaults(Item item) { }
+
 		/// <inheritdoc cref="ModItem.AddRecipes"/>
 		public virtual void AddRecipes() { }
+
+		/// <summary>
+		/// Allows VIB addons to completely commandeer the shot-firing process.
+		/// <br/><br/>TODO: make this optional
+		/// </summary>
+		/// <param name="addons"></param>
+		/// <returns></returns>
+		public virtual void VIBOverride(Item[] addons) { }
+
+		public virtual void ModifyPreShot(Projectile shot) { }
+		public virtual void ModifyShotSpread(Projectile shot) { }
+		public virtual void ModifyShotAI(Projectile shot) { }
+		public virtual void ModifyShotHitTile(Projectile shot) { }
+		public virtual void ModifyShotHitEntity(Projectile shot) { }
+		public virtual void ModifyShotHitPlayer(Projectile shot) { }
+		public virtual void ModifyShotKill(Projectile shot) { }
+
 		public virtual bool ShowTileHover(Player player) => player.InInteractionRange(Player.tileTargetX, Player.tileTargetY, default);
 		/// <inheritdoc cref="ModTile.CanKillTile(int, int, ref bool)"/>
 		public virtual bool CanKillTile(int i, int j) { return true; }

@@ -29,10 +29,10 @@ namespace MetroidMod.Common.UI
 	{
 		//Let it be known that I have zero clue what I'm doing        -Z
 		/// <summary>
-		/// The <see cref="PowerBeam2"/> the UI is currently accessing.
+		/// The <see cref="ArmCannon"/> the UI is currently accessing.
 		/// </summary>
-		private PowerBeam2 target;
-		public static bool Visible => Main.playerInventory && Main.LocalPlayer.chest == -1 && (Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].type == ModContent.ItemType<PowerBeam2>());
+		private ArmCannon target;
+		public static bool Visible => Main.playerInventory && Main.LocalPlayer.chest == -1 && (Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].type == ModContent.ItemType<ArmCannon>());
 
 		//TODO: when done, make it not look like shit
 		private UIPanel panel;
@@ -42,17 +42,17 @@ namespace MetroidMod.Common.UI
 		private UIText psdText;
 		private AddonSlot[] BeamSlot;
 		private UIText debugInfo;
-		//private AddonSlot[] ChargeSlots;
+		//private AddonSlot[] ChargeSlot;
 		//private AddonSlot[] MissileSlot;
-		//private AddonSlot[] ComboSlots;
+		//private AddonSlot[] ComboSlot;
 
 		public override void OnInitialize()
 		{
 			panel = new UIPanel();
 			panel.Width.Set(380, 0);
-			panel.Height.Set(200, 0);
-			panel.MarginTop = panel.VAlign = 0.3f;
-			panel.MarginLeft = 44;
+			panel.Height.Set(230, 0);
+			panel.MarginTop = panel.VAlign = 0.305f;
+			panel.MarginLeft = 66;
 			panel.PaddingTop = 0;
 			panel.BackgroundColor = new Color(0, 0, 0.25f, 0.5f);
 			panel.BorderColor = Color.Teal;
@@ -74,8 +74,8 @@ namespace MetroidMod.Common.UI
 			pseudoScrewButton = new UIPanel();
 			pseudoScrewButton.Width.Set(75, 0);
 			pseudoScrewButton.Height.Set(30, 0);
-			pseudoScrewButton.HAlign = 0.95f;
-			pseudoScrewButton.VAlign = 0.9f;
+			pseudoScrewButton.HAlign = 0.97f;
+			pseudoScrewButton.VAlign = 0.95f;
 			pseudoScrewButton.BackgroundColor = Color.Red;
 			pseudoScrewButton.OnLeftClick += OnPSBClick;
 			psdText = new UIText("P.S.A");
@@ -88,7 +88,7 @@ namespace MetroidMod.Common.UI
 			for (int i = 0; i < 5; ++i) //do it like this for now because I'll figure out charge shit later
 			{
 				BeamSlot[i] = new AddonSlot();
-				BeamSlot[i].VAlign = 0.38f;
+				BeamSlot[i].VAlign = 0.34f;
 				BeamSlot[i].HAlign = 0.07f + (0.22f * i);
 				BeamSlot[i].isBeam = true;
 				BeamSlot[i].isArray = false;
@@ -97,7 +97,7 @@ namespace MetroidMod.Common.UI
 
 				labels[i] = new UIText(i.ToString(), 0.8f);
 				labels[i].HAlign = 0.11f + (0.195f * i);
-				labels[i].VAlign = BeamSlot[i].VAlign + 0.2f;
+				labels[i].VAlign = BeamSlot[i].VAlign + 0.175f;
 
 				panel.Append(BeamSlot[i]);
 				panel.Append(labels[i]);
@@ -118,7 +118,7 @@ namespace MetroidMod.Common.UI
 			//I hope this is how it works otherwise I'm gonna feel pretty stupid
 			if (Visible)
 			{
-				target = (PowerBeam2)Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem;
+				target = (ArmCannon)Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem;
 				for (int i = 0; i < 5; ++i)
 				{
 					BeamSlot[i].ItemRead = target.BeamAddonAccess[i];
@@ -254,7 +254,7 @@ namespace MetroidMod.Common.UI
 
 			public override void DarkMagic(Item ItemWrite, bool StackAttack)
 			{
-				PowerBeam2 target = (PowerBeam2)Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem;
+				ArmCannon target = (ArmCannon)Main.LocalPlayer.inventory[Main.LocalPlayer.MetroidPlayer().selectedItem].ModItem;
 				//Takes the action attempted through SlotMagic and applies the effect to the addon array.
 				if (StackAttack) //Player tried to stack stuff
 				{

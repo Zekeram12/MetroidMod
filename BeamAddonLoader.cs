@@ -10,14 +10,20 @@ using Terraria.ModLoader.IO;
 using System.Drawing.Text;
 using MetroidMod.ID;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using MetroidMod.Content.Items.Weapons;
+using MetroidMod.Common.Players;
+using MetroidMod.Common.GlobalItems;
 
 namespace MetroidMod
 {
 	/// <summary>
 	/// Manages ModBeamAddons, stacks effects of addons installed into arm cannons, and provides helpful methods to retrieve beam addon information.
 	/// </summary>
-	public static class BeamAddonLoader //I'll be honest I dunno what half this shit does, it's mostly copied from the modsuitaddon equivalent
+	public static class BeamAddonLoader 
 	{
+		#region Accessor methods
+		//I'll be honest I dunno what half this shit does, it's mostly copied from the modsuitaddon equivalent   -Z
+
 		/// <summary>
 		/// List of all beam addons that exist.
 		/// </summary>
@@ -25,13 +31,15 @@ namespace MetroidMod
 
 		internal static readonly Dictionary<int, string> unloadedAddons = new();
 
-		//The following methods are all used in order to obtain an addon's ModBeamAddon value through its other forms.
+		//The following methods are the internals for the TryGetAddon() and GetAddon() methods.
 		internal static bool TryGetValue(this IList<ModBeamAddon> list, int type, out ModBeamAddon beam) =>
 			list.TryGetValue(i => i.Type == type, out beam);
 		internal static bool TryGetValue(this IList<ModBeamAddon> list, string fullName, out ModBeamAddon beam) =>
 			list.TryGetValue(i => i.FullName == fullName, out beam);
 		internal static bool TryGetValue(this IList<ModBeamAddon> list, Item item, out ModBeamAddon beam) =>
 			list.TryGetValue(i => i.ItemType == item.type, out beam);
+
+		//The following methods are all used in order to obtain an addon's ModBeamAddon value through its other forms.
 		public static bool TryGetAddon(Item item, out ModBeamAddon beam) =>
 			addons.TryGetValue(item, out beam);
 		public static bool TryGetAddon(int type, out ModBeamAddon beam) =>
@@ -90,13 +98,18 @@ namespace MetroidMod
 			}
 			return false;
 		}
+		#endregion
 
-		//the following methods are used to combine the data of all beams installed in the arm cannon.
+		#region Addon data stackers
+
+		//This is where the magic happens.
+		//Each of these methods takes in data from the beam addons and uses them to change the Power Beam.
+
 		/// <summary>
 		/// Checks the piority values of the loaded addons and determines what the projectile should look like.<br/>
 		/// Method checks for VIB, then ShapePriority, then ColorPriority.<br/>
 		/// Unique combination graphics should be checked for within the beam with the highest ShapePriority in the combination<br/>
-		/// (i.e. Fusion's DNA-esque Plasma+Wave would be stored and checked for in Plasma)
+		/// <i>(i.e. Fusion's DNA-esque Plasma+Wave would be stored and checked for in Plasma)</i>
 		/// </summary>
 		/// <param name="slot1"></param>
 		/// <param name="slot2"></param>
@@ -112,15 +125,19 @@ namespace MetroidMod
 				.ToArray();
 			int[] shapeOfPew = new int[addons.Length]; //store all the ShapePriority check results (I couldn't come up with a secondary joke (mostly because I didn't feel like trying))
 			int[] fuckYouIceBeam = new int[addons.Length]; //store all the ColorPriority check results here at Big Zek Hell's Arrays
-			int[] winners;
-
+			int[] winners; //Will contain all of the results
+			//In order:
+			//[0] = The slot containing the highest ShapePriority (0-4)
+			//[1] = The slot containing the highest ColorPriority (0-4)
+			//[2] = 0 if the VIBe check failed, 1 if it passed
+			//[3] = 0 if ColorPriority doesn't have SoundOverride, 1 if it does
 
 			MetroidMod.Instance.Logger.Info("Starting VIBe check");
 			for (int i = 0; i < addons.Length - 1; ++i) //Check all addon slots for if VIB is true
 			{
 				MetroidMod.Instance.Logger.Info("VIBe Check - Slot " + i + "\nContains: " + addons[i]);
 				if (addons[i] == null || addons[i].VIB == false) { continue; }
-				if (addons[i].VIB == true) { winners = [i, i]; MetroidMod.Instance.Logger.Info("Slot " + i + " passed the VIBe Check"); return winners; }
+				if (addons[i].VIB == true) { winners = [i, i, 1, 0]; MetroidMod.Instance.Logger.Info("Slot " + i + " passed the VIBe Check"); return winners; }
 			}
 			MetroidMod.Instance.Logger.Info("You have failed the VIBe Check");
 
@@ -150,6 +167,7 @@ namespace MetroidMod
 			ModBeamAddon[] colorOrder = [addons[BeamAddonSlotID.Primary], addons[BeamAddonSlotID.Spread], addons[BeamAddonSlotID.Ion], addons[BeamAddonSlotID.Secondary], addons[BeamAddonSlotID.Ability]]; //something something 20XX
 			int highestColorPriorityIndex = -1;
 			int highestColorPriority = -1;
+			int willItOverride = 0;
 			MetroidMod.Instance.Logger.Info("Starting color priority check \nValue starts at -1");
 			for (int i = 0; i < colorOrder.Length; i++)
 			{
@@ -161,180 +179,50 @@ namespace MetroidMod
 					highestColorPriority = colorOrder[i].ColorPriority;
 				}
 			}
-
+			if (highestColorPriorityIndex != -1)
+			{
+				if (addons[highestColorPriorityIndex].SoundOverride) //Check if the winner has sound override enabled.
+				{ MetroidMod.Instance.Logger.Info("SoundOverride detected!"); willItOverride = 1; }
+				else { MetroidMod.Instance.Logger.Info("No SoundOverride here."); willItOverride = 0; }
+			}
 
 			MetroidMod.Instance.Logger.Info("Result: Slot " + highestShapePriorityIndex);
-			winners = [highestShapePriorityIndex, highestColorPriorityIndex]; //If there are no winners it should turn up -1, -1
-			MetroidMod.Instance.Logger.Info("winners value: [" + highestShapePriorityIndex + ", " + highestColorPriorityIndex + "]");
+			winners = [highestShapePriorityIndex, highestColorPriorityIndex, 0, willItOverride]; //If there are no winners it should turn up -1, -1, 0, 0
+			MetroidMod.Instance.Logger.Info("winners value: [" + winners[0] + ", " + winners[1] + ", " + winners[2] + ", " + winners[3] +"]");
 			return winners;
 		}
+		/// <summary>
+		/// Combines all of the <b>weapon-side stats</b> of every installed beam addon.
+		/// <br/>These values will be applied to the weapon itself.
+		/// </summary>
+		/// <param name="beamAddons"></param>
+		/// <returns></returns>
+		public static float[] WeaponStatStacker(Item[] beamAddons)
+		{
+			float[] totals = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			ModBeamAddon[] addons = beamAddons //Converts the Item array into a ModBeamAddon array, allowing for direct stat access.
+				.Select(GetAddon)
+				.ToArray();
 
-		/// <summary>
-		/// Combines the additional base damage values of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static int BaseDamageStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			int sum = 0;
+			//Run through all installed addons that actually add stats (i.e. leaving out the ammo slot)
 			for (int i = 0; i < addons.Length - 1; ++i)
 			{
 				if (addons[i] == null) { continue; }
-				sum += addons[i].BaseDamage;
+				totals[0] += addons[i].BaseDamage;
+				totals[1] += addons[i].DamageMult;
+				totals[2] += addons[i].BaseSpeed;
+				totals[3] += addons[i].SpeedMult;
+				totals[4] += addons[i].BaseVelocity;
+				totals[5] += addons[i].VelocityMult;
+				totals[6] += addons[i].CritChance;
+				totals[7] += addons[i].BaseOverheat;
+				totals[8] += addons[i].OverheatMult;
+				totals[9] += addons[i].AddShots;
 			}
-			return sum;
+			return totals;
 		}
 
-		#region Addon stat stackers
-		/// <summary>
-		/// Combines the damage multipliers of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static float DamageMultStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			float sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].DamageMult;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the additional base usetime of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static int BaseSpeedStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			int sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].BaseSpeed;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the usetime multiplier of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static float SpeedMultStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			float sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].SpeedMult;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the additional base velocity of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static float BaseVelocityStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			float sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].BaseVelocity;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the velocity multiplier of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static float VelocityMultStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			float sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].VelocityMult;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the critical strike chance of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static int CritChanceStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			int sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].CritChance;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the additional base overheat of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static int BaseOverheatStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			int sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].BaseOverheat;
-			}
-			return sum;
-		}
-		/// <summary>
-		/// Combines the overheat multiplier of every installed addon into a single value.
-		/// </summary>
-		/// <param name="addons"></param>
-		/// <returns></returns>
-		public static float OverheatMultStacker(Item[] beamAddons)
-		{
-			ModBeamAddon[] addons = beamAddons //Creates a version of BeamAddonAccess that can be fed into the visual priority system
-				.Select(GetAddon)
-				.ToArray();
-			float sum = 0;
-			for (int i = 0; i < addons.Length - 1; ++i)
-			{
-				if (addons[i] == null) { continue; }
-				sum += addons[i].OverheatMult;
-			}
-			return sum;
-		}
 		#endregion
-
 
 		#region Under-the-hood stuff
 		internal static void ReloadTypes(TagCompound unloadedTag)

@@ -31,8 +31,12 @@
     <Folder Include="Content\NPCs\Town\" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Remove="WIPstuff\**" />
     <Compile Remove="ExampleMetroidAddonMod\**" />
+    <Compile Remove="WIPstuff\**" />
     <EmbeddedResource Remove="ExampleMetroidAddonMod\**" />
+    <EmbeddedResource Remove="WIPstuff\**" />
     <None Remove="ExampleMetroidAddonMod\**" />
+    <None Remove="WIPstuff\**" />
   </ItemGroup>
 </Project>
